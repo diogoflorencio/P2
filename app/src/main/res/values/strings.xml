@@ -1,0 +1,107 @@
+<resources>
+    <string name="app_name">DiscoveryTrip</string>
+    <string name="facebook_app_id">218714921902397</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="evento_label">Eventos</string>
+    <string name="cadastro_evento_label">Novo evento</string>
+    <string name="home_label">Home</string>
+    <string name="localizacao_label">Localização</string>
+    <string name="perfil_label">Perfil</string>
+    <string name="edicao_perfil_label">Edição de perfil</string>
+    <string name="ponto_turistico_label">Meus pontos turísticos</string>
+    <string name="cadastro_ponto_turistico_label">Novo ponto turístico</string>
+
+    //CadastroActivity strings
+    <string name="falha_conexao">Falha na conexão com o servidor!</string>
+    <string name="us_cadastro_sucesso">Usuário cadastrado com sucesso!</string>
+
+    //EventoCadastroFragment strings
+    <string name="ev_cadastro_sucesso">Evento cadastrado com sucesso!</string>
+
+    //PontoTuristicoFragment strings
+    <string name="pt_cadastro_sucesso">Ponto turístico cadastrado com sucesso!</string>
+
+    //EventoCadastroFragment strings
+    <string name="pf_edicao_sucesso">Dados alterados com sucesso!</string>
+    <string name="pf_edicao_falha">Não foi possível realizar a edição</string>
+
+    //HomeActivity strings
+    <string name="gps_loading">Carregando Localização...</string>
+    <string name="address_found">Endereço localizado: </string>
+    <string name="current_coordinates">Coordenadas de localização atual: </string>
+    <string name="gps_deactivated">GPS Desativado</string>
+    <string name="gps_activated">GPS Ativado</string>
+    <string name="gps_lat">Lat = </string>
+    <string name="gps_long">Long = </string>
+
+    //LoginActivity strings
+    <string name="login_cancel">LoginActivity cancelado</string>
+    <string name="login_error">Ocorreu um erro ao realizar login</string>
+
+    <string name="login_unable">Não foi possível realizar o login</string>
+
+    <string name="conection_failed">Conexao falhou</string>
+
+    //Validção strings
+    <string name="validate_name">Informe seu nome</string>
+    <string name="validate_event_name">Informe o nome do evento</string>
+    <string name="validate_pnt_name">Informe o nome do ponto turístico</string>
+    <string name="validate_email">Digite um email válido</string>
+    <string name="validate_password_match">Senhas estão diferentes</string>
+    <string name="validate_password_lenght">Senha deve ter no mínimo 6 caracteres</string>
+    <string name="validate_password_empty">Digite sua senha</string>
+    <string name="validate_category">Informe uma categoria</string>
+    <string name="validate_description">Informe uma descrição</string>
+    <string name="validate_date_begin">Informe uma data de inicio</string>
+    <string name="validate_date_end">Informe uma data de fim</string>
+    <string name="validate_date_dontMatch">A data de inicio deve ser menor que a de fim</string>
+    <string name="validate_time">Informe uma hora</string>
+    <string name="validate_kind">Informe um tipo</string>
+    <string name="validate_price">Informe um preço</string>
+    <string name="validate_any_field">Nenhum dos campos foi alterado</string>
+    <string name="validate_photo">Selecione uma foto</string>
+    <string name="validate_max_photo">Limite de imagens selecionadas atingido</string>
+
+    //AppLoginJson strings
+    <string name="login_id">discoveryTrip</string>
+    <string name="login_clientsecret">0ca9b9b3-1370-44e0-b42e-01cf6f6fc04c</string>
+
+    //Event kind strings
+    <string-array name="event_kind">
+        <item>Privado</item>
+        <item>Publico</item>
+    </string-array>
+
+    //Attractions cetegory strings
+    <string-array name="attraction_category">
+        <item>Praia</item>
+        <item>Ilha resort</item>
+        <item>Parque</item>
+        <item>Floresta</item>
+        <item>Monumento</item>
+        <item>Templo</item>
+        <item>Zoológico</item>
+        <item>Aquário</item>
+        <item>Museu</item>
+        <item>Galeria de arte</item>
+        <item>Botânico</item>
+        <item>Jardim</item>
+        <item>Castelo</item>
+        <item>Biblioteca</item>
+        <item>Prisão</item>
+        <item>Arranha-céu</item>
+        <item>Ponte</item>
+    </string-array>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps_activityfdsf">Map</string>
+    <string name="title_activity_detalhes_atracao">DetalhesAtracaoActivity</string>
+    <string name="title_activity_meus_eventos">MeusEventosActivity</string>
+    <string name="title_activity_meus_pontos_turisticos">MeusPontosTuristicosActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
