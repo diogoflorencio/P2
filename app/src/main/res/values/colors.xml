@@ -11,4 +11,5 @@
     <color name="discoverytrip_view_background">#d6ffffff</color>
     <color name="confirmebutton">#82c300</color>
     <color name="transparent">#00ffffff</color>
+    <color name="cameraForeground">#87000000</color>
 </resources>

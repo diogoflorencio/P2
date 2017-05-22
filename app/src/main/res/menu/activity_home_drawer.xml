@@ -7,16 +7,8 @@
             android:icon="@drawable/home_icon"
             android:title="Home" />
         <item
-            android:id="@+id/nav_perfil"
+            android:id="@+id/nav_leitor"
             android:icon="@drawable/perfil_icon"
-            android:title="Perfil" />
-        <item
-            android:id="@+id/nav_ponto_turistico"
-            android:icon="@drawable/attraction_icon"
-            android:title="Ponto turístico" />
-        <item
-            android:id="@+id/nav_evento"
-            android:icon="@drawable/event_menu_icon"
-            android:title="Evento" />
+            android:title="Leitor" />
     </group>
 </menu>

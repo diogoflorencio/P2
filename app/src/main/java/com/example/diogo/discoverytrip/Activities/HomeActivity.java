@@ -2,6 +2,7 @@ package com.example.diogo.discoverytrip.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,7 @@ import android.view.View;
 import com.example.diogo.discoverytrip.DataBase.AcessToken;
 import com.example.diogo.discoverytrip.Fragments.EventoFragment;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
+import com.example.diogo.discoverytrip.Fragments.LeitorCodigoBarras;
 import com.example.diogo.discoverytrip.Fragments.PerfilFragment;
 import com.example.diogo.discoverytrip.Fragments.PontoTuristicoFragment;
 import com.example.diogo.discoverytrip.Model.RefreshTokenManeger;
@@ -142,20 +144,12 @@ public class HomeActivity extends AppCompatActivity
                 fragment = new HomeFragment();
                 currentScreen = R.id.nav_home;
                 break;
-            case R.id.nav_perfil:
-                Log.d("Logger", "Home localizacao");
-                fragment = new PerfilFragment();
-                currentScreen = R.id.nav_perfil;
-                break;
-            case R.id.nav_ponto_turistico:
-                Log.d("Logger", "Home localizacao");
-                fragment = new PontoTuristicoFragment();
-                currentScreen = R.id.nav_ponto_turistico;
-                break;
-            case R.id.nav_evento:
-                Log.d("Logger", "Home localizacao");
-                fragment = new EventoFragment();
-                currentScreen = R.id.nav_evento;
+            case R.id.nav_leitor:
+                Log.d("Logger", "Leitor código de barras");
+                fragment = new LeitorCodigoBarras();
+                LeitorCodigoBarras.width = Resources.getSystem().getDisplayMetrics().widthPixels;
+                LeitorCodigoBarras.heigth = Resources.getSystem().getDisplayMetrics().heightPixels;
+                currentScreen = R.id.nav_leitor;
                 break;
         }
 
