@@ -50,10 +50,10 @@ public class ListAdapterPontosTuristicos extends ArrayAdapter<Atracao>{
     private static Semaphore semaphore = new Semaphore(1);
     final static Handler handler = new Handler();
 
-    public ListAdapterPontosTuristicos(Activity context, LayoutInflater inflater, List<Atracao> atracoes){
-        super(context, R.layout.item_evento,atracoes);
+    public ListAdapterPontosTuristicos(Activity context, List<Atracao> atracoes){
+        super(context, R.layout.item_ponto_turistico,atracoes);
 
-        this.inflater = inflater;
+        this.inflater = context.getLayoutInflater();
         this.atracoes = atracoes;
         this.context = context;
         this.views = new ArrayList<>();
@@ -69,7 +69,6 @@ public class ListAdapterPontosTuristicos extends ArrayAdapter<Atracao>{
         final Atracao atracao = atracoes.get(position);
         View view = inflater.inflate(R.layout.item_ponto_turistico, null, true);
         final ImageView foto = (ImageView) view.findViewById(R.id.iten_img);
-        ImageView icone = (ImageView) view.findViewById(R.id.iten_icon);
 
         final TextView titulo  = (TextView) view.findViewById(R.id.iten_name);
         String photoId = null;
@@ -89,7 +88,6 @@ public class ListAdapterPontosTuristicos extends ArrayAdapter<Atracao>{
             }
         }
         else{
-            icone.setImageResource(R.drawable.ponto_turistico_icon);
             photoId = atracao.getPhotos().get(0);
             final String finalPhotoId1 = photoId;
             new Thread(new Runnable() {
@@ -144,7 +142,7 @@ public class ListAdapterPontosTuristicos extends ArrayAdapter<Atracao>{
                             } else {
                                 try {
                                     ErrorResponse error = ApiClient.errorBodyConverter.convert(response.errorBody());
-                                    Log.e("Pesquisa de pontos turisticos",error.getErrorDescription());
+                                    Log.e("Pesquisa pontos tur",error.getErrorDescription());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -156,7 +154,7 @@ public class ListAdapterPontosTuristicos extends ArrayAdapter<Atracao>{
                         @Override
                         public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
                             // Log error here since request failed
-                            Log.e("Pesquisa de pontos turisticos","Erro ao baixar imagem");
+                            Log.e("Pesquisa pontos tur","Erro ao baixar imagem");
                             semaphore.release();
                         }
                     });

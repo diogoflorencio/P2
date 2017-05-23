@@ -31,6 +31,7 @@ import com.example.diogo.discoverytrip.REST.ServerResponses.SearchResponse;
 import com.example.diogo.discoverytrip.Util.ListAdapterPontosTuristicos;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -95,7 +96,31 @@ public class HomeFragment extends Fragment implements LocationListener {
                 search();
             }
         });
+        mokup();
+
         return rootView;
+    }
+
+    private void mokup(){
+        List<Atracao> atracoes = new ArrayList<>();
+        Atracao atracao = new Atracao();
+        atracao.setDescricao("Teste");
+        atracao.setEndDate("teste");
+        atracao.setNome("Supermercado");
+        atracao.setType(HomeActivity.EVENT_TYPE);
+        atracao.setStartDate("2017-05-12'T'10:00:00");
+        atracao.setEndDate("2017-05-20'T'10:00:00");
+        atracao.setCategory("Teste");
+        atracao.setKind("Teste");
+
+        atracoes.add(atracao);
+        atracoes.add(atracao);
+        atracoes.add(atracao);
+        atracoes.add(atracao);
+        atracoes.add(atracao);
+        ListAdapterPontosTuristicos adapter = new ListAdapterPontosTuristicos(getActivity(),
+                atracoes);
+        listView.setAdapter(adapter);
     }
 
     private void startGPS() {
@@ -139,7 +164,6 @@ public class HomeFragment extends Fragment implements LocationListener {
                         if(atracoes != null){
                             Log.d("Logger","Setting listview adapter");
                             ListAdapterPontosTuristicos adapter = new ListAdapterPontosTuristicos(getActivity(),
-                                    getActivity().getLayoutInflater(),
                                     atracoes);
                             for (Atracao atrac:atracoes
                                  ) {
@@ -230,7 +254,6 @@ public class HomeFragment extends Fragment implements LocationListener {
                     if(atracoes != null){
                         Log.d("Logger","Setting listview adapter");
                         ListAdapterPontosTuristicos adapter = new ListAdapterPontosTuristicos(getActivity(),
-                                getActivity().getLayoutInflater(),
                                 atracoes);
                         listView.setAdapter(adapter);
                     }else

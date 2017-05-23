@@ -85,7 +85,6 @@
             android:name=".Activities.LembreteActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities.NotificacaoActivity"></activity>
 
         <!--Broadcast e Service para notificação-->
         <receiver android:name=".Broadcast.BroadcastNotificacao">
