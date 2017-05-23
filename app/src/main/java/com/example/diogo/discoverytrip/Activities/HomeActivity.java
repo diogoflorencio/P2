@@ -20,11 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.diogo.discoverytrip.DataBase.AcessToken;
-import com.example.diogo.discoverytrip.Fragments.EventoFragment;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
 import com.example.diogo.discoverytrip.Fragments.LeitorCodigoBarras;
-import com.example.diogo.discoverytrip.Fragments.PerfilFragment;
-import com.example.diogo.discoverytrip.Fragments.PontoTuristicoFragment;
 import com.example.diogo.discoverytrip.Model.RefreshTokenManeger;
 import com.example.diogo.discoverytrip.R;
 import com.facebook.AccessToken;
@@ -43,7 +40,6 @@ public class HomeActivity extends AppCompatActivity
 
     private GoogleApiClient mGoogleApiClient;
     public static final String EVENT_TYPE = "Event", POINT_TYPE = "Attraction";
-    private View background;
     private int currentScreen = 0;
     private NavigationView navigationView;
     private boolean entrou = true;
@@ -58,7 +54,6 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        background = findViewById(R.id.home_activity_background);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -70,23 +65,10 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         currentScreen = R.id.nav_home;
-        buildGooglePlusConfigs();
         createHomeFragment();
         if(AccessToken.getCurrentAccessToken() == null)
             /* start Thread refreshToken */
             RefreshTokenManeger.refreshToken(getSharedPreferences("refreshToken", Context.MODE_PRIVATE));
-    }
-
-    public void buildGooglePlusConfigs() {
-        Log.d("Logger", "Home buildGooglePlusConfigs");
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
     }
 
     @Override
@@ -108,27 +90,10 @@ public class HomeActivity extends AppCompatActivity
         switch (id) {
             case R.id.logout:
                 Log.d("Logger", "Home logout");
-                AcessToken.salvar("", getSharedPreferences("acessToken", Context.MODE_PRIVATE));/*clear AcessToken*/
-                AccessToken.setCurrentAccessToken(null);/*logout facebook*/
-                signOutGooglePlus();/*logout google plus*/
-                if(RefreshTokenManeger.isRunning()) RefreshTokenManeger.stop(); /*stop thread RefreshTokenManeger*/
-                startActivity(new Intent(HomeActivity.this,LoginActivity.class));
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void signOutGooglePlus() {
-        Log.d("Logger", "Home signOutGooglePlus");
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        // [START_EXCLUDE]
-                        // [END_EXCLUDE]
-                    }
-                });
     }
 
     //pra adicionar uma opção aqui (menu lateral), basta colocar um item no "activity_home_drawer", botar um case nesse switch

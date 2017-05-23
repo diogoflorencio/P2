@@ -61,36 +61,15 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Activities.MapsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.LoginActivity"
+            android:name=".Activities.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/DiscoveryTripTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/DiscoveryTripTheme" />
-        <activity
-            android:name=".Activities.CadastroActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/DiscoveryTripTheme" />
-        <activity
-            android:name=".Activities.RecuperarSenhaActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/DiscoveryTripTheme" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -105,16 +84,6 @@
         <activity
             android:name=".Activities.LembreteActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activities.MeusEventosActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_activity_meus_eventos"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activities.MeusPontosTuristicosActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_activity_meus_pontos_turisticos"
             android:screenOrientation="portrait" />
         <activity android:name=".Activities.NotificacaoActivity"></activity>
 
