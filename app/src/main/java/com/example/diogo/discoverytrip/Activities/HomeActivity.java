@@ -147,8 +147,8 @@ public class HomeActivity extends AppCompatActivity
         Log.d("Logger", "Home onBackPressed");
 
         if(currentScreen != R.id.nav_home){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.popBackStack();
+            changeFragment(new HomeFragment());
+            currentScreen = R.id.nav_home;
             return;
         }
 
