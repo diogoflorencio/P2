@@ -1,13 +1,10 @@
 package com.example.diogo.discoverytrip.Activities;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,20 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.diogo.discoverytrip.DataBase.AcessToken;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
 import com.example.diogo.discoverytrip.Fragments.LeitorCodigoBarras;
-import com.example.diogo.discoverytrip.Model.RefreshTokenManeger;
 import com.example.diogo.discoverytrip.R;
-import com.facebook.AccessToken;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.example.diogo.discoverytrip.Util.WIFIManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 /**
  * Classe activity responsavel pela activity home (principal) na aplicação
@@ -38,11 +28,10 @@ import com.google.android.gms.common.api.Status;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
-    private GoogleApiClient mGoogleApiClient;
-    public static final String EVENT_TYPE = "Event", POINT_TYPE = "Attraction";
+    public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
     private NavigationView navigationView;
-    private boolean entrou = true;
+
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -66,9 +55,6 @@ public class HomeActivity extends AppCompatActivity
 
         currentScreen = R.id.nav_home;
         createHomeFragment();
-        if(AccessToken.getCurrentAccessToken() == null)
-            /* start Thread refreshToken */
-            RefreshTokenManeger.refreshToken(getSharedPreferences("refreshToken", Context.MODE_PRIVATE));
     }
 
     @Override
@@ -90,7 +76,13 @@ public class HomeActivity extends AppCompatActivity
         switch (id) {
             case R.id.logout:
                 Log.d("Logger", "Home logout");
-                finish();
+                WIFIManager wf = new WIFIManager(this.getApplication());
+                wf.enableWifi();
+                android.net.wifi.WifiManager wifiManager =
+                        (android.net.wifi.WifiManager) getApplicationContext().getSystemService(getApplicationContext().WIFI_SERVICE);
+                wf.requestWIFIConnection("+_+","mini@casadebaixo1");
+
+                //finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -131,9 +123,7 @@ public class HomeActivity extends AppCompatActivity
         Log.d("Logger", "Home createHomeFragment");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         HomeFragment fragment = new HomeFragment();
-
         transaction.add(R.id.content_home, fragment);
-
         transaction.commit();
     }
 
@@ -166,25 +156,4 @@ public class HomeActivity extends AppCompatActivity
         fragmentManager.commit();
     }
 
-     /*private void addEvent(){
-        Localizacao localizacao =  new Localizacao();
-        localizacao.setLatitude("latitude");
-        localizacao.setLongitude("longitude");
-        localizacao.setCountry("pais");
-        localizacao.setCity("cidade");
-        localizacao.setStreetName("rua");
-        localizacao.setStreetNumber("numero");
-
-        Atracao atracao = new Atracao();
-        atracao.setNome("nome");
-        atracao.setDescricao("descrição");
-        atracao.setEndDate("data");
-        atracao.setPhotoId("foto");
-        atracao.setType("type");
-        atracao.setLocalizacao(localizacao);
-
-        DiscoveryTripBD bd = new DiscoveryTripBD(this);
-        bd.insertLembretesTable(atracao);
-        Log.d("Logger", bd.selectAllLembretesTable().get(0).getType()+ " aqui");
-    }*/
 }
