@@ -76,13 +76,12 @@
 
         <EditText
             android:id="@+id/dialog_ler_produto_quantidade"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/textView12"
             android:layout_below="@+id/dialog_ler_produto_preco"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/textView12"
             android:layout_toRightOf="@+id/textView12"
             android:ems="10"
             android:inputType="number" />

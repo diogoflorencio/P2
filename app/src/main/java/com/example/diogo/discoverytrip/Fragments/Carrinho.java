@@ -7,9 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.diogo.discoverytrip.Activities.LeitorCodigoBarrasActivity;
+import com.example.diogo.discoverytrip.Model.ItemCompra;
+import com.example.diogo.discoverytrip.Model.Produto;
 import com.example.diogo.discoverytrip.R;
+import com.example.diogo.discoverytrip.Util.ListAdapterItemCompra;
+import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +27,9 @@ import com.example.diogo.discoverytrip.R;
  * create an instance of this fragment.
  */
 public class Carrinho extends Fragment implements View.OnClickListener {
+
+    private List<ItemCompra> produtosLidos;
+    private ListView lVProdutos;
 
     public Carrinho() {
         // Required empty public constructor
@@ -48,11 +59,22 @@ public class Carrinho extends Fragment implements View.OnClickListener {
         FloatingActionButton btnAdd = (FloatingActionButton) view.findViewById(R.id.carrinho_addItem);
         btnAdd.setOnClickListener(this);
 
+        produtosLidos = new ArrayList<>();
+        lVProdutos = (ListView) view.findViewById(R.id.carrinho_list_produtos);
+
         return view;
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(getContext(),LeitorCodigoBarrasActivity.class));
+        startActivityForResult(new Intent(getContext(),LeitorCodigoBarrasActivity.class), 465);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ItemCompra item = (ItemCompra) data.getExtras().get("Item");
+        produtosLidos.add(item);
+        ListAdapterItemCompra adapter = new ListAdapterItemCompra(getActivity(), produtosLidos);
+        lVProdutos.setAdapter(adapter);
     }
 }

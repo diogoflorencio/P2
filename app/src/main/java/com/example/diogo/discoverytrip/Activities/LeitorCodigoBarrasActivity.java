@@ -2,12 +2,15 @@ package com.example.diogo.discoverytrip.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.diogo.discoverytrip.Model.ItemCompra;
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.Model.Produto;
 import com.example.diogo.discoverytrip.R;
@@ -92,7 +95,7 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
     private void showReadDialog(final String codigo){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        Produto produto = mokup(codigo);
+        final Produto produto = mokup(codigo);
 
         builder.setTitle("Código identificado!");
 
@@ -100,6 +103,7 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
         TextView cod = (TextView) view.findViewById(R.id.dialog_ler_produto_codigo);
         TextView descricao = (TextView) view.findViewById(R.id.dialog_ler_produto_descricao);
         TextView preco = (TextView) view.findViewById(R.id.dialog_ler_produto_preco);
+        final EditText quantidade = (EditText) view.findViewById(R.id.dialog_ler_produto_quantidade);
 
         cod.setText(codigo);
         descricao.setText(produto.getDescricao());
@@ -111,8 +115,11 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                startCameraSource();
+                Intent intent = new Intent();
+                intent.putExtra("Item", new ItemCompra(produto,Float.valueOf(quantidade.getText().toString())));
+                setResult(465,intent);
                 dialog.dismiss();
+                finish();
             }
         });
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

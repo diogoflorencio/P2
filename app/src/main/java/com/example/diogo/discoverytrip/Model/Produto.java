@@ -2,11 +2,13 @@ package com.example.diogo.discoverytrip.Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by renato on 28/05/17.
  */
 
-public class Produto {
+public class Produto implements Serializable{
 
     @SerializedName("")
     private float valorUn;

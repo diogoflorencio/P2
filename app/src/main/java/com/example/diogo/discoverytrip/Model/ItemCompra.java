@@ -1,10 +1,12 @@
 package com.example.diogo.discoverytrip.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by renato on 28/05/17.
  */
 
-public class ItemCompra {
+public class ItemCompra implements Serializable{
 
     Produto produto;
     float quantidade;
