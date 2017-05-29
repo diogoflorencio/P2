@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.util.Log;
 
-import com.example.diogo.discoverytrip.Fragments.LeitorCodigoBarras;
+import com.example.diogo.discoverytrip.Activities.LeitorCodigoBarrasActivity;
 import com.example.diogo.discoverytrip.Util.CallBack;
 import com.example.diogo.discoverytrip.Util.Camera_Views.GraphicOverlay;
 import com.google.android.gms.vision.Detector;
@@ -42,7 +42,7 @@ public class GraphicTracker<T> extends Tracker<Barcode> {
         float yPoint1, yPoint2, yPoint3, yPoint4;
 
         mGraphic.setId(id);
-        adjustY = (int) (dpToPx(readAreaHeight)*virtualHeight/ LeitorCodigoBarras.heigth);
+        adjustY = (int) (dpToPx(readAreaHeight)*virtualHeight/ LeitorCodigoBarrasActivity.heigth);
         Log.d("Logger","AdjustY = "+adjustY);
         Point ponto = item.cornerPoints[0];
         yPoint1 = ponto.y;
@@ -60,10 +60,8 @@ public class GraphicTracker<T> extends Tracker<Barcode> {
         yPoint4 = ponto.y;
         Log.d("Logger codigo de barras","X4="+ponto.x+" Y4="+ponto.y);
 
-        if(yPoint1 >= virtualHeight/2 - adjustY &&
-                yPoint2 >= virtualHeight/2 - adjustY &&
-                yPoint3 <= virtualHeight/2 + adjustY &&
-                yPoint4 <= virtualHeight/2 + adjustY){
+        if(yPoint1 < virtualHeight/2 &&
+                yPoint3 > virtualHeight/2){
             lastBarcode = item.rawValue;
             callBack.onFound(item.rawValue);
         }
@@ -79,7 +77,7 @@ public class GraphicTracker<T> extends Tracker<Barcode> {
         mOverlay.add(mGraphic);
         mGraphic.updateItem(item);
 
-        adjustY = (int) (dpToPx(readAreaHeight)*virtualHeight/LeitorCodigoBarras.heigth);
+        adjustY = (int) (dpToPx(readAreaHeight)*virtualHeight/LeitorCodigoBarrasActivity.heigth);
         Log.d("Logger","AdjustY = "+adjustY);
         Point ponto = item.cornerPoints[0];
         yPoint1 = ponto.y;
@@ -97,10 +95,8 @@ public class GraphicTracker<T> extends Tracker<Barcode> {
         yPoint4 = ponto.y;
         Log.d("Logger codigo de barras","X4="+ponto.x+" Y4="+ponto.y);
 
-        if(yPoint1 >= virtualHeight/2 - adjustY &&
-                yPoint2 >= virtualHeight/2 - adjustY &&
-                yPoint3 <= virtualHeight/2 + adjustY &&
-                yPoint4 <= virtualHeight/2 + adjustY){
+        if(yPoint1 < virtualHeight/2 &&
+                yPoint3 > virtualHeight/2){
 
             if(lastBarcode == null) {
                 lastBarcode = item.rawValue;

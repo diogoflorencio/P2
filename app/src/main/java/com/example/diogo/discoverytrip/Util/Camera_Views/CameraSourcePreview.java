@@ -11,7 +11,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 
-import com.example.diogo.discoverytrip.Fragments.LeitorCodigoBarras;
+import com.example.diogo.discoverytrip.Activities.LeitorCodigoBarrasActivity;
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.CameraSource;
 
@@ -171,6 +171,6 @@ public class CameraSourcePreview extends ViewGroup {
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(4.0f);
-        canvas.drawLine(0, LeitorCodigoBarras.heigth,LeitorCodigoBarras.width*2,LeitorCodigoBarras.heigth,paint);
+        canvas.drawLine(0, LeitorCodigoBarrasActivity.heigth,LeitorCodigoBarrasActivity.width*2,LeitorCodigoBarrasActivity.heigth,paint);
     }
 }

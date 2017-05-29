@@ -17,7 +17,6 @@ import android.view.MenuItem;
 
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
-import com.example.diogo.discoverytrip.Fragments.LeitorCodigoBarras;
 import com.example.diogo.discoverytrip.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -98,8 +97,8 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_comprar:
                 Log.d("Logger", "Leitor código de barras");
                 fragment = new Carrinho();
-                LeitorCodigoBarras.width = Resources.getSystem().getDisplayMetrics().widthPixels;
-                LeitorCodigoBarras.heigth = Resources.getSystem().getDisplayMetrics().heightPixels;
+                LeitorCodigoBarrasActivity.width = Resources.getSystem().getDisplayMetrics().widthPixels;
+                LeitorCodigoBarrasActivity.heigth = Resources.getSystem().getDisplayMetrics().heightPixels;
                 break;
         }
 
