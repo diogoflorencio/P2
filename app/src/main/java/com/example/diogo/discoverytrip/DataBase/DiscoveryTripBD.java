@@ -8,11 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.diogo.discoverytrip.DataHora.DataHoraSystem;
-import com.example.diogo.discoverytrip.Model.Atracao;
-import com.example.diogo.discoverytrip.Model.Localizacao;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
-import com.example.diogo.discoverytrip.REST.ServerResponses.SearchResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,122 +63,122 @@ public class DiscoveryTripBD extends SQLiteOpenHelper {
         * onCreate(sqLiteDatabase);*/
     }
 
-    public void insertLembretesTable(Atracao atracao){
-        SQLiteDatabase db = this.getWritableDatabase();
-        deleteLembreteTable(atracao);
-        ContentValues values = new ContentValues();
-        values.put(LembretesTable.Column.COLUMN_Id, atracao.getId());
-        values.put(LembretesTable.Column.COLUMN_Nome, atracao.getName());
-        values.put(LembretesTable.Column.COLUMN_Descricao, atracao.getDescription());
-        values.put(LembretesTable.Column.COLUMN_Data_Start, atracao.getStartDate());
-        values.put(LembretesTable.Column.COLUMN_Data_End, atracao.getEndDate());
-        values.put(LembretesTable.Column.COLUMN_Latitude, atracao.getLocation().getLatitude());
-        values.put(LembretesTable.Column.COLUMN_Longitude, atracao.getLocation().getLongitude());
-        values.put(LembretesTable.Column.COLUMN_Pais, atracao.getLocation().getCountry());
-        values.put(LembretesTable.Column.COLUMN_Cidade, atracao.getLocation().getCity());
-        values.put(LembretesTable.Column.COLUMN_Rua, atracao.getLocation().getStreetName());
-        values.put(LembretesTable.Column.COLUMN_Numero, atracao.getLocation().getStreetNumber());
-        values.put(LembretesTable.Column.COLUMN_FotoID, atracao.getPhotoId());
-        values.put(LembretesTable.Column.COLUMN_King, atracao.getKind());
-        values.put(LembretesTable.Column.COLUMN_Price, atracao.getPrice());
-        values.put(LembretesTable.Column.COLUMN_Type, atracao.getType());
-
-        // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(LembretesTable.TABLE_NAME, null, values);
-    }
-
-    /*recupera todos os lembretes do dia corrente*/
-    public List<Atracao> selectDayLembretesTable(){
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selection = LembretesTable.Column.COLUMN_Data_Start + " = ?";
-        String[] selectionArgs = {DataHoraSystem.data()};
-
-        String sortOrder =
-                LembretesTable.Column.COLUMN_Nome + " DESC";
-
-        Cursor cursor = db.query(
-                LembretesTable.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                sortOrder
-        );
-        return parseCursoToAtracao(cursor);
-    }
-
-    /*recupera todos os lembretes da base de dados*/
-    public List<Atracao> selectAllLembretesTable(){
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String sortOrder =
-                LembretesTable.Column.COLUMN_Nome + " DESC";
-
-        Cursor cursor = db.query(
-                LembretesTable.TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-        return parseCursoToAtracao(cursor);
-    }
-
-    /*deleta os lembretes do dia corrente*/
-    public void deleteLembretesTable(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selection = LembretesTable.Column.COLUMN_Data_Start + " LIKE ?";
-        String[] selectionArgs = { DataHoraSystem.data() };
-        db.delete(LembretesTable.TABLE_NAME, selection, selectionArgs);
-    }
-
-    /*deleta um lembrete por id*/
-    public void deleteLembreteTable(Atracao atracao){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selection = LembretesTable.Column.COLUMN_Id + " LIKE ?";
-        String[] selectionArgs = { atracao.getId() };
-        db.delete(LembretesTable.TABLE_NAME, selection, selectionArgs);
-    }
-
-    private List<Atracao> parseCursoToAtracao(Cursor cursor){
-        List<Atracao> atracoes = new ArrayList<Atracao>();
-        if(cursor.moveToFirst()){
-            do {
-                Atracao atracao = new Atracao();
-                Localizacao localizacao = new Localizacao();
-
-                localizacao.setLatitude(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Latitude)));
-                localizacao.setLongitude(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Longitude)));
-                localizacao.setCountry(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Pais)));
-                localizacao.setCity(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Cidade)));
-                localizacao.setStreetName(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Rua)));
-                localizacao.setStreetNumber(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Numero)));
-
-                atracao.setId(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Id)));
-                atracao.setNome(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Nome)));
-                atracao.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Descricao)));
-                atracao.setStartDate(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Data_Start)));
-                atracao.setEndDate(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Data_End)));
-                atracao.setLocalizacao(localizacao);
-                atracao.setPhotoId(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_FotoID)));
-                atracao.setKind(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_King)));
-                atracao.setPrice(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Price)));
-                atracao.setType(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Type)));
-
-                atracoes.add(atracao);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        return atracoes;
-    }
-
-    public void updateBD(List<Atracao> eventsOfDay){
-        for (Atracao a : selectDayLembretesTable())
-            if(!eventsOfDay.contains(a))
-                deleteLembreteTable(a);
-    }
+//    public void insertLembretesTable(Atracao atracao){
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        deleteLembreteTable(atracao);
+//        ContentValues values = new ContentValues();
+//        values.put(LembretesTable.Column.COLUMN_Id, atracao.getId());
+//        values.put(LembretesTable.Column.COLUMN_Nome, atracao.getName());
+//        values.put(LembretesTable.Column.COLUMN_Descricao, atracao.getDescription());
+//        values.put(LembretesTable.Column.COLUMN_Data_Start, atracao.getStartDate());
+//        values.put(LembretesTable.Column.COLUMN_Data_End, atracao.getEndDate());
+//        values.put(LembretesTable.Column.COLUMN_Latitude, atracao.getLocation().getLatitude());
+//        values.put(LembretesTable.Column.COLUMN_Longitude, atracao.getLocation().getLongitude());
+//        values.put(LembretesTable.Column.COLUMN_Pais, atracao.getLocation().getCountry());
+//        values.put(LembretesTable.Column.COLUMN_Cidade, atracao.getLocation().getCity());
+//        values.put(LembretesTable.Column.COLUMN_Rua, atracao.getLocation().getStreetName());
+//        values.put(LembretesTable.Column.COLUMN_Numero, atracao.getLocation().getStreetNumber());
+//        values.put(LembretesTable.Column.COLUMN_FotoID, atracao.getPhotoId());
+//        values.put(LembretesTable.Column.COLUMN_King, atracao.getKind());
+//        values.put(LembretesTable.Column.COLUMN_Price, atracao.getPrice());
+//        values.put(LembretesTable.Column.COLUMN_Type, atracao.getType());
+//
+//        // Insert the new row, returning the primary key value of the new row
+//        long newRowId = db.insert(LembretesTable.TABLE_NAME, null, values);
+//    }
+//
+//    /*recupera todos os lembretes do dia corrente*/
+//    public List<Atracao> selectDayLembretesTable(){
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        String selection = LembretesTable.Column.COLUMN_Data_Start + " = ?";
+//        String[] selectionArgs = {DataHoraSystem.data()};
+//
+//        String sortOrder =
+//                LembretesTable.Column.COLUMN_Nome + " DESC";
+//
+//        Cursor cursor = db.query(
+//                LembretesTable.TABLE_NAME,
+//                projection,
+//                selection,
+//                selectionArgs,
+//                null,
+//                null,
+//                sortOrder
+//        );
+//        return parseCursoToAtracao(cursor);
+//    }
+//
+//    /*recupera todos os lembretes da base de dados*/
+//    public List<Atracao> selectAllLembretesTable(){
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        String sortOrder =
+//                LembretesTable.Column.COLUMN_Nome + " DESC";
+//
+//        Cursor cursor = db.query(
+//                LembretesTable.TABLE_NAME,
+//                projection,
+//                null,
+//                null,
+//                null,
+//                null,
+//                sortOrder
+//        );
+//        return parseCursoToAtracao(cursor);
+//    }
+//
+//    /*deleta os lembretes do dia corrente*/
+//    public void deleteLembretesTable(){
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String selection = LembretesTable.Column.COLUMN_Data_Start + " LIKE ?";
+//        String[] selectionArgs = { DataHoraSystem.data() };
+//        db.delete(LembretesTable.TABLE_NAME, selection, selectionArgs);
+//    }
+//
+//    /*deleta um lembrete por id*/
+//    public void deleteLembreteTable(Atracao atracao){
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String selection = LembretesTable.Column.COLUMN_Id + " LIKE ?";
+//        String[] selectionArgs = { atracao.getId() };
+//        db.delete(LembretesTable.TABLE_NAME, selection, selectionArgs);
+//    }
+//
+//    private List<Atracao> parseCursoToAtracao(Cursor cursor){
+//        List<Atracao> atracoes = new ArrayList<Atracao>();
+//        if(cursor.moveToFirst()){
+//            do {
+//                Atracao atracao = new Atracao();
+//                Localizacao localizacao = new Localizacao();
+//
+//                localizacao.setLatitude(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Latitude)));
+//                localizacao.setLongitude(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Longitude)));
+//                localizacao.setCountry(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Pais)));
+//                localizacao.setCity(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Cidade)));
+//                localizacao.setStreetName(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Rua)));
+//                localizacao.setStreetNumber(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Numero)));
+//
+//                atracao.setId(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Id)));
+//                atracao.setNome(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Nome)));
+//                atracao.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Descricao)));
+//                atracao.setStartDate(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Data_Start)));
+//                atracao.setEndDate(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Data_End)));
+//                atracao.setLocalizacao(localizacao);
+//                atracao.setPhotoId(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_FotoID)));
+//                atracao.setKind(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_King)));
+//                atracao.setPrice(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Price)));
+//                atracao.setType(cursor.getString(cursor.getColumnIndexOrThrow(LembretesTable.Column.COLUMN_Type)));
+//
+//                atracoes.add(atracao);
+//            }while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//        return atracoes;
+//    }
+//
+//    public void updateBD(List<Atracao> eventsOfDay){
+//        for (Atracao a : selectDayLembretesTable())
+//            if(!eventsOfDay.contains(a))
+//                deleteLembreteTable(a);
+//    }
 }

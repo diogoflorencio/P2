@@ -18,25 +18,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
-import com.example.diogo.discoverytrip.DataBase.AcessToken;
-import com.example.diogo.discoverytrip.Model.Atracao;
-import com.example.diogo.discoverytrip.Model.VisualizationType;
+import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
-import com.example.diogo.discoverytrip.REST.ApiClient;
-import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
-import com.example.diogo.discoverytrip.REST.ServerResponses.SearchResponse;
-import com.example.diogo.discoverytrip.Util.ListAdapterPontosTuristicos;
+import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -71,47 +60,37 @@ public class HomeFragment extends Fragment implements LocationListener {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Atracao atracao = (Atracao) parent.getAdapter().getItem(position);
-                if(atracao.getType().equals(HomeActivity.EVENT_TYPE)){
-                    DetalhesEventoFragment.atracao = atracao;
-                    DetalhesEventoFragment.visualizationType = VisualizationType.Lembrar_Evento;
+                Oferta atracao = (Oferta) parent.getAdapter().getItem(position);
+                DetalhesEventoFragment.atracao = atracao;
 
-                    HomeActivity activity = (HomeActivity) getActivity();
-                    activity.changeFragment(new DetalhesEventoFragment());
-                }
+                HomeActivity activity = (HomeActivity) getActivity();
+                activity.changeFragment(new DetalhesEventoFragment());
+
             }
         });
         searchText  = (EditText) rootView.findViewById(R.id.pnt_search_edt);
         searchOK = (Button) rootView.findViewById(R.id.pnt_search_ok_btn);
-        searchOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                search();
-            }
-        });
+//        searchOK.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                search();
+//            }
+//        });
         mokup();
 
         return rootView;
     }
 
     private void mokup(){
-        List<Atracao> atracoes = new ArrayList<>();
-        Atracao atracao = new Atracao();
-        atracao.setDescricao("Teste");
-        atracao.setEndDate("teste");
-        atracao.setNome("Supermercado");
-        atracao.setType(HomeActivity.EVENT_TYPE);
-        atracao.setStartDate("2017-05-12'T'10:00:00");
-        atracao.setEndDate("2017-05-20'T'10:00:00");
-        atracao.setCategory("Teste");
-        atracao.setKind("Teste");
+        List<Oferta> atracoes = new ArrayList<>();
+        Oferta atracao = new Oferta("Teste","Só testando","Testando",null,null,10.9f,9f,null);
 
         atracoes.add(atracao);
         atracoes.add(atracao);
         atracoes.add(atracao);
         atracoes.add(atracao);
         atracoes.add(atracao);
-        ListAdapterPontosTuristicos adapter = new ListAdapterPontosTuristicos(getActivity(),
+        ListAdapterOferta adapter = new ListAdapterOferta(getActivity(),
                 atracoes);
         listView.setAdapter(adapter);
     }
@@ -143,46 +122,46 @@ public class HomeFragment extends Fragment implements LocationListener {
         longitude = location.getLongitude();
 
         if(get){
-            Log.d("Logger","Location search latitude: "+latitude+" longitude: "+longitude);
-            get = false;
-            String token = AcessToken.recuperar(getActivity().getSharedPreferences("acessToken", Context.MODE_PRIVATE));
-            Call<SearchResponse> call = ApiClient.API_SERVICE.searchPontoTuristico("bearer "+token,latitude, longitude,2000);
-            call.enqueue(new Callback<SearchResponse>() {
-                @Override
-                public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
-                    if(response.isSuccessful()){
-
-                        Log.d("Logger","pesquisa de atrações realizada com sucesso");
-                        List<Atracao> atracoes = response.body().getAtracoes();
-                        if(atracoes != null){
-                            Log.d("Logger","Setting listview adapter");
-                            ListAdapterPontosTuristicos adapter = new ListAdapterPontosTuristicos(getActivity(),
-                                    atracoes);
-                            for (Atracao atrac:atracoes
-                                 ) {
-                                Log.d("Logger",atrac.getName());
-                                Log.d("Logger","Category "+atrac.getCategory());
-                            }
-                            listView.setAdapter(adapter);
-                        }
-                    }
-                    else{
-                        try {
-                            ErrorResponse error = ApiClient.errorBodyConverter.convert(response.errorBody());
-                            Log.e("Logger", "Pesquisa de atrações "+error.getErrorDescription());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SearchResponse> call, Throwable t) {
-                    get = true;
-                    Log.e("Logger","Pesquisa de pontos turisticos error: "+t.toString());
-                    Toast.makeText(getActivity(),"Erro ao se conectar com o servidor!",Toast.LENGTH_SHORT).show();
-                }
-            });
+//            Log.d("Logger","Location search latitude: "+latitude+" longitude: "+longitude);
+//            get = false;
+//            String token = AcessToken.recuperar(getActivity().getSharedPreferences("acessToken", Context.MODE_PRIVATE));
+//            Call<SearchResponse> call = ApiClient.API_SERVICE.searchPontoTuristico("bearer "+token,latitude, longitude,2000);
+//            call.enqueue(new Callback<SearchResponse>() {
+//                @Override
+//                public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+//                    if(response.isSuccessful()){
+//
+//                        Log.d("Logger","pesquisa de atrações realizada com sucesso");
+//                        List<Atracao> atracoes = response.body().getAtracoes();
+//                        if(atracoes != null){
+//                            Log.d("Logger","Setting listview adapter");
+//                            ListAdapterItemCompra adapter = new ListAdapterItemCompra(getActivity(),
+//                                    atracoes);
+//                            for (Atracao atrac:atracoes
+//                                 ) {
+//                                Log.d("Logger",atrac.getName());
+//                                Log.d("Logger","Category "+atrac.getCategory());
+//                            }
+//                            listView.setAdapter(adapter);
+//                        }
+//                    }
+//                    else{
+//                        try {
+//                            ErrorResponse error = ApiClient.errorBodyConverter.convert(response.errorBody());
+//                            Log.e("Logger", "Pesquisa de atrações "+error.getErrorDescription());
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<SearchResponse> call, Throwable t) {
+//                    get = true;
+//                    Log.e("Logger","Pesquisa de pontos turisticos error: "+t.toString());
+//                    Toast.makeText(getActivity(),"Erro ao se conectar com o servidor!",Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
     }
 
@@ -236,28 +215,28 @@ public class HomeFragment extends Fragment implements LocationListener {
         } else locationManager.removeUpdates(this);
     }
 
-    private void search(){
-        String token = AcessToken.recuperar(getActivity().getSharedPreferences("acessToken", Context.MODE_PRIVATE));
-        Call<SearchResponse> call = ApiClient.API_SERVICE.search("bearer "+token,searchText.getText().toString());
-        call.enqueue(new Callback<SearchResponse>() {
-            @Override
-            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
-                if(response.isSuccessful()){
-                    List<Atracao> atracoes = response.body().getAtracoes();
-                    if(atracoes != null){
-                        Log.d("Logger","Setting listview adapter");
-                        ListAdapterPontosTuristicos adapter = new ListAdapterPontosTuristicos(getActivity(),
-                                atracoes);
-                        listView.setAdapter(adapter);
-                    }else
-                        Toast.makeText(getActivity(),"Sem resultados para pesquisa",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SearchResponse> call, Throwable t) {
-                Toast.makeText(getActivity(),"Erro ao se conectar com o servidor!",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//    private void search(){
+//        String token = AcessToken.recuperar(getActivity().getSharedPreferences("acessToken", Context.MODE_PRIVATE));
+//        Call<SearchResponse> call = ApiClient.API_SERVICE.search("bearer "+token,searchText.getText().toString());
+//        call.enqueue(new Callback<SearchResponse>() {
+//            @Override
+//            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+//                if(response.isSuccessful()){
+//                    List<Atracao> atracoes = response.body().getAtracoes();
+//                    if(atracoes != null){
+//                        Log.d("Logger","Setting listview adapter");
+//                        ListAdapterItemCompra adapter = new ListAdapterItemCompra(getActivity(),
+//                                atracoes);
+//                        listView.setAdapter(adapter);
+//                    }else
+//                        Toast.makeText(getActivity(),"Sem resultados para pesquisa",Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<SearchResponse> call, Throwable t) {
+//                Toast.makeText(getActivity(),"Erro ao se conectar com o servidor!",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,13 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.diogo.discoverytrip.DataBase.AcessToken;
-import com.example.diogo.discoverytrip.Model.Atracao;
+import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -35,26 +33,25 @@ import java.util.concurrent.Semaphore;
 import okhttp3.ResponseBody;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.example.diogo.discoverytrip.Activities.HomeActivity.EVENT_TYPE;
 
 /**
  * Created by renato on 07/02/17.
  */
-public class ListAdapterPontosTuristicos extends ArrayAdapter<Atracao>{
+public class ListAdapterOferta extends ArrayAdapter<Oferta>{
     private List<View> views;
     private LayoutInflater inflater;
-    private List<Atracao> atracoes;
+    private List<Oferta> ofertas;
     private Activity context;
-    private SimpleDateFormat BDFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    private SimpleDateFormat nomalFormat = new SimpleDateFormat("dd/M/yyyy");
+    private SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private SimpleDateFormat nomalDateFormat = new SimpleDateFormat("dd/M/yyyy");
     private static Semaphore semaphore = new Semaphore(1);
     final static Handler handler = new Handler();
 
-    public ListAdapterPontosTuristicos(Activity context, List<Atracao> atracoes){
-        super(context, R.layout.item_ponto_turistico,atracoes);
+    public ListAdapterOferta(Activity context, List<Oferta> itens){
+        super(context, R.layout.item_oferta,itens);
 
         this.inflater = context.getLayoutInflater();
-        this.atracoes = atracoes;
+        this.ofertas = itens;
         this.context = context;
         this.views = new ArrayList<>();
     }
@@ -66,29 +63,18 @@ public class ListAdapterPontosTuristicos extends ArrayAdapter<Atracao>{
         }
 
         Log.d("Logger","getView "+position);
-        final Atracao atracao = atracoes.get(position);
-        View view = inflater.inflate(R.layout.item_ponto_turistico, null, true);
+        final Oferta oferta = ofertas.get(position);
+        View view = inflater.inflate(R.layout.item_oferta, null, true);
         final ImageView foto = (ImageView) view.findViewById(R.id.iten_img);
 
         final TextView titulo  = (TextView) view.findViewById(R.id.iten_name);
         String photoId = null;
 
-        titulo.setText(atracao.getName());
+        titulo.setText(oferta.getSupermercado());
+        Log.d("Logger","Supermercado "+oferta.getSupermercado());
 
-        if(atracao.getType().equals(EVENT_TYPE)){
-            if(atracao.getPhotoId() != null){
-                photoId = atracao.getPhotoId();
-                final String finalPhotoId = photoId;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadImage(foto, finalPhotoId, context);
-                    }
-                }).start();
-            }
-        }
-        else{
-            photoId = atracao.getPhotos().get(0);
+        photoId = oferta.getFotoId();
+        if(photoId != null) {
             final String finalPhotoId1 = photoId;
             new Thread(new Runnable() {
                 @Override
@@ -196,7 +182,7 @@ public class ListAdapterPontosTuristicos extends ArrayAdapter<Atracao>{
     }
 
     @Override
-    public Atracao getItem(int position){
-        return atracoes.get(position);
+    public Oferta getItem(int position){
+        return ofertas.get(position);
     }
 }

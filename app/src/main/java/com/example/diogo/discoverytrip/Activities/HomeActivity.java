@@ -1,13 +1,10 @@
 package com.example.diogo.discoverytrip.Activities;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,20 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.diogo.discoverytrip.DataBase.AcessToken;
+import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
 import com.example.diogo.discoverytrip.Fragments.LeitorCodigoBarras;
-import com.example.diogo.discoverytrip.Model.RefreshTokenManeger;
 import com.example.diogo.discoverytrip.R;
-import com.facebook.AccessToken;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 /**
  * Classe activity responsavel pela activity home (principal) na aplicação
@@ -64,11 +54,7 @@ public class HomeActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        currentScreen = R.id.nav_home;
         createHomeFragment();
-        if(AccessToken.getCurrentAccessToken() == null)
-            /* start Thread refreshToken */
-            RefreshTokenManeger.refreshToken(getSharedPreferences("refreshToken", Context.MODE_PRIVATE));
     }
 
     @Override
@@ -109,12 +95,11 @@ public class HomeActivity extends AppCompatActivity
                 fragment = new HomeFragment();
                 currentScreen = R.id.nav_home;
                 break;
-            case R.id.nav_leitor:
+            case R.id.nav_comprar:
                 Log.d("Logger", "Leitor código de barras");
-                fragment = new LeitorCodigoBarras();
+                fragment = new Carrinho();
                 LeitorCodigoBarras.width = Resources.getSystem().getDisplayMetrics().widthPixels;
                 LeitorCodigoBarras.heigth = Resources.getSystem().getDisplayMetrics().heightPixels;
-                currentScreen = R.id.nav_leitor;
                 break;
         }
 
@@ -165,26 +150,4 @@ public class HomeActivity extends AppCompatActivity
         fragmentManager.addToBackStack(null);
         fragmentManager.commit();
     }
-
-     /*private void addEvent(){
-        Localizacao localizacao =  new Localizacao();
-        localizacao.setLatitude("latitude");
-        localizacao.setLongitude("longitude");
-        localizacao.setCountry("pais");
-        localizacao.setCity("cidade");
-        localizacao.setStreetName("rua");
-        localizacao.setStreetNumber("numero");
-
-        Atracao atracao = new Atracao();
-        atracao.setNome("nome");
-        atracao.setDescricao("descrição");
-        atracao.setEndDate("data");
-        atracao.setPhotoId("foto");
-        atracao.setType("type");
-        atracao.setLocalizacao(localizacao);
-
-        DiscoveryTripBD bd = new DiscoveryTripBD(this);
-        bd.insertLembretesTable(atracao);
-        Log.d("Logger", bd.selectAllLembretesTable().get(0).getType()+ " aqui");
-    }*/
 }

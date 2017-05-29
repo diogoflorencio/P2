@@ -54,7 +54,7 @@
             android:textColor="@color/cast_expanded_controller_background_color" />
 
         <TextView
-            android:id="@+id/item_produto_precoUN"
+            android:id="@+id/item_produto_valorUn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/item_produto_descricao"
