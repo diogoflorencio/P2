@@ -8,13 +8,13 @@
     <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
-        android:background="@color/discoverytrip_view_background"
-        android:id="@+id/relativeLayout">
+        android:background="@drawable/round_border">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -29,43 +29,44 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="12dp"
+            android:layout_toEndOf="@+id/imageView2"
+            android:layout_toRightOf="@+id/imageView2"
             android:text="Supermercado"
             android:textColor="@color/cast_expanded_controller_background_color"
-            android:textSize="30sp"
-            android:layout_marginTop="12dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:textSize="30sp" />
 
         <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
             android:layout_above="@+id/textView2"
             android:layout_below="@+id/imageView2"
-            android:id="@+id/listView" />
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total"
-            android:textColor="@color/cast_expanded_controller_background_color"
-            android:textSize="30sp"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/textView3"
-            android:layout_toStartOf="@+id/textView3" />
+            android:layout_toStartOf="@+id/textView3"
+            android:text="Total"
+            android:textColor="@color/cast_expanded_controller_background_color"
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:text="R$ 100,00"
-            android:textColor="@color/cast_expanded_controller_background_color"
-            android:textSize="30sp"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:paddingLeft="10dp"
+            android:text="R$ 0,00"
+            android:textColor="@color/cast_expanded_controller_background_color"
+            android:textSize="30sp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/carrinho_addItem"

@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-    <!--permissão para manipular wifi-->
+    <!-- permissão para manipular wifi -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -67,6 +67,7 @@
             android:theme="@style/DiscoveryTripTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -81,15 +82,17 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <!--Broadcast e Service para notificação-->
+        <!-- Broadcast e Service para notificação -->
         <receiver android:name=".Broadcast.BroadcastNotificacao">
             <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
         <service android:name=".Service.ServiceNotificacao" />
 
+        <activity android:name=".Activities.LeitorCodigoBarrasActivity"></activity>
     </application>
 
 </manifest>

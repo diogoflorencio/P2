@@ -1,6 +1,7 @@
 package com.example.diogo.discoverytrip.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
+import com.example.diogo.discoverytrip.Activities.LeitorCodigoBarrasActivity;
 import com.example.diogo.discoverytrip.R;
 
 /**
@@ -54,7 +56,6 @@ public class Carrinho extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        HomeActivity home = (HomeActivity) getActivity();
-        home.changeFragment(new LeitorCodigoBarras());
+        startActivity(new Intent(getContext(),LeitorCodigoBarrasActivity.class));
     }
 }

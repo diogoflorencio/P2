@@ -1,13 +1,10 @@
-package com.example.diogo.discoverytrip.Fragments;
+package com.example.diogo.discoverytrip.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.Util.Barcode_Detector.BarcodeTrackerFactory;
@@ -20,8 +17,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-
-public class LeitorCodigoBarras extends Fragment implements CallBack {
+public class LeitorCodigoBarrasActivity extends AppCompatActivity implements CallBack{
 
     public static int width, heigth;
     private CameraSourcePreview mPreview;
@@ -31,38 +27,29 @@ public class LeitorCodigoBarras extends Fragment implements CallBack {
     private BarcodeDetector barcodeDetector;
     private BarcodeTrackerFactory barcodeFactory;
 
-    public LeitorCodigoBarras() {
-        // Required empty public constructor
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_leitor_codigo_barras);
 
-        final View view = inflater.inflate(R.layout.fragment_leitor_codigo_barras, container, false);
-
-        mPreview = (CameraSourcePreview) view.findViewById(R.id.leitor_codigo_barras_cameraContent);
-        mOverlay = (GraphicOverlay) view.findViewById(R.id.leitor_codigo_barras_cameraView);
-        barcodeDetector = new BarcodeDetector.Builder(getContext())
+        mPreview = (CameraSourcePreview) findViewById(R.id.leitor_codigo_barras_cameraContent);
+        mOverlay = (GraphicOverlay) findViewById(R.id.leitor_codigo_barras_cameraView);
+        barcodeDetector = new BarcodeDetector.Builder(this)
                 .build();
         barcodeFactory = new BarcodeTrackerFactory(mOverlay, this);
         barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
-        cameraBuilder = new CameraSource.Builder(getContext(), barcodeDetector)
+        cameraBuilder = new CameraSource.Builder(this, barcodeDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true);
 
         mCameraSource = cameraBuilder.build();
         startCameraSource();
-        getActivity().setTitle("Leitor");
-
-        Log.d("Logger codigo de barras","heigth: "+heigth+" width: "+width);
-        return view;
     }
 
     @Override
     public void onFound(final String cod) {
         Log.d("Logger","Codigo encontrado "+cod);
-        getActivity().runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 showReadDialog(cod);
@@ -72,7 +59,7 @@ public class LeitorCodigoBarras extends Fragment implements CallBack {
 
     public void startCameraSource() {
         Log.d("Logger camera","Start");
-        getActivity().runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -95,7 +82,7 @@ public class LeitorCodigoBarras extends Fragment implements CallBack {
     }
 
     private void showReadDialog(final String codigo){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Código identificado!");
         builder.setMessage("Código de barras: "+codigo);
@@ -135,10 +122,5 @@ public class LeitorCodigoBarras extends Fragment implements CallBack {
         super.onDestroy();
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden){
-        if(hidden){
-            releaseCameraSource();
-        }
-    }
+
 }
