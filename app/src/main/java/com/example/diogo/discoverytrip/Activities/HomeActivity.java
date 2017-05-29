@@ -18,16 +18,13 @@ import android.view.MenuItem;
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
 import com.example.diogo.discoverytrip.R;
-
 import com.example.diogo.discoverytrip.Util.WIFIManager;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
  * Classe activity responsavel pela activity home (principal) na aplicação
  */
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
@@ -127,11 +124,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d("Logger", "Home onConnectionFailed");
-    }
-
-    @Override
     public void onBackPressed() {
         Log.d("Logger", "Home onBackPressed");
 
@@ -144,6 +136,12 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void changeFragment(Fragment fragment){
+        if(fragment instanceof HomeFragment){
+            currentScreen = R.id.nav_home;
+        }
+        else {
+            currentScreen = 0;
+        }
         FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
         Bundle extras = getIntent().getExtras();
         if(extras !=null) {
