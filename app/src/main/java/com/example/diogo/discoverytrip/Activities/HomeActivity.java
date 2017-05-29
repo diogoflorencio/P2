@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
 import com.example.diogo.discoverytrip.R;
+
+import com.example.diogo.discoverytrip.Util.WIFIManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -27,11 +29,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
-    private GoogleApiClient mGoogleApiClient;
-    public static final String EVENT_TYPE = "Event", POINT_TYPE = "Attraction";
+    public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
     private NavigationView navigationView;
-    private boolean entrou = true;
+
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -75,7 +76,13 @@ public class HomeActivity extends AppCompatActivity
         switch (id) {
             case R.id.logout:
                 Log.d("Logger", "Home logout");
-                finish();
+                WIFIManager wf = new WIFIManager(this.getApplication());
+                wf.enableWifi();
+                android.net.wifi.WifiManager wifiManager =
+                        (android.net.wifi.WifiManager) getApplicationContext().getSystemService(getApplicationContext().WIFI_SERVICE);
+                wf.requestWIFIConnection("+_+","mini@casadebaixo1");
+
+                //finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -115,9 +122,7 @@ public class HomeActivity extends AppCompatActivity
         Log.d("Logger", "Home createHomeFragment");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         HomeFragment fragment = new HomeFragment();
-
         transaction.add(R.id.content_home, fragment);
-
         transaction.commit();
     }
 

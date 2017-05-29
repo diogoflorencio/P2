@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,9 +21,11 @@ public class WIFIManager {
     private static final String WPA = "WPA";
     private static final String WEP = "WEP";
     private static final String OPEN = "Open";
+    private android.net.wifi.WifiManager wifiManager;
 
     public WIFIManager(Context context){
        this.context = context;
+        this.wifiManager = (android.net.wifi.WifiManager) context.getSystemService(Context.WIFI_SERVICE);;
     }
 
     public boolean isConnected() {
@@ -38,7 +39,8 @@ public class WIFIManager {
     }
 
     public void enableWifi() {
-        android.net.wifi.WifiManager wifiManager = (android.net.wifi.WifiManager) context.getApplicationContext().getSystemService(context.WIFI_SERVICE);
+        android.net.wifi.WifiManager wifiManager =
+                (android.net.wifi.WifiManager) context.getApplicationContext().getSystemService(context.WIFI_SERVICE);
         if (!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
         }
@@ -53,24 +55,23 @@ public class WIFIManager {
 
     public void requestWIFIConnection(String networkSSID, String networkPass) {
         try {
-            android.net.wifi.WifiManager wifiManager = (android.net.wifi.WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             //Check ssid exists
-            if (scanWifi(wifiManager, networkSSID)) {
+            if (scanWifi(networkSSID)) {
                 //Security type detection
-                String SECURE_TYPE = checkSecurity(wifiManager, networkSSID);
+                String SECURE_TYPE = checkSecurity(networkSSID);
                 if (SECURE_TYPE.equals(WPA)) {
-                    WPA(networkSSID, networkPass, wifiManager);
+                    WPA(networkSSID, networkPass);
                 } else if (SECURE_TYPE.equals(WEP)) {
                     WEP(networkSSID, networkPass);
                 } else
-                    OPEN(wifiManager, networkSSID);
+                    OPEN(networkSSID);
             }
         } catch (Exception e) {
             Log.d("Logger", "Error Connecting WIFI " + e);
         }
     }
 
-    private void WPA(String networkSSID, String networkPass, android.net.wifi.WifiManager wifiManager) {
+    public void WPA(String networkSSID, String networkPass) {
         WifiConfiguration wc = new WifiConfiguration();
         wc.SSID = "\"" + networkSSID + "\"";
         wc.preSharedKey = "\"" + networkPass + "\"";
@@ -91,7 +92,7 @@ public class WIFIManager {
         //
     }
 
-    private void OPEN(android.net.wifi.WifiManager wifiManager, String networkSSID) {
+    public void OPEN(String networkSSID) {
         WifiConfiguration wc = new WifiConfiguration();
         wc.SSID = "\"" + networkSSID + "\"";
         wc.hiddenSSID = true;
@@ -104,16 +105,18 @@ public class WIFIManager {
         wifiManager.reconnect();
     }
 
-    private boolean scanWifi(android.net.wifi.WifiManager wifiManager, String networkSSID) {
+    public boolean scanWifi(String networkSSID) {
         List<ScanResult> scanList = wifiManager.getScanResults();
+        Log.d("Logger", "redes: "+ scanList.size());
         for (ScanResult i : scanList) {
+            Log.d("Logger", i.SSID);
             if (i.SSID != null && i.SSID.equals(networkSSID))
                 return true;
         }
         return false;
     }
 
-    public String getCurrentSSID(android.net.wifi.WifiManager wifiManager) {
+    public String getCurrentSSID() {
         String ssid = null;
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -126,7 +129,7 @@ public class WIFIManager {
         return ssid;
     }
 
-    private String checkSecurity(android.net.wifi.WifiManager wifiManager, String ssid) {
+    private String checkSecurity(String ssid) {
         List<ScanResult> networkList = wifiManager.getScanResults();
         for (ScanResult network : networkList) {
             if (network.SSID.equals(ssid)) {
