@@ -81,11 +81,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity
-            android:name=".Activities.LembreteActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
-
         <!--Broadcast e Service para notificação-->
         <receiver android:name=".Broadcast.BroadcastNotificacao">
             <intent-filter>

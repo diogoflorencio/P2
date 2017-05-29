@@ -24,16 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageButton
-                    android:id="@+id/detalhe_evento_deletar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="false"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@color/transparent"
-                    app:srcCompat="@android:drawable/ic_delete" />
-
                 <TextView
                     android:id="@+id/detalhe_evento_titulo"
                     android:layout_width="wrap_content"
@@ -156,16 +146,6 @@
                     android:text="R$ 17,90"
                     android:textColor="@android:color/background_dark"
                     android:textSize="18sp" />
-
-                <Button
-                    android:id="@+id/detalhe_evento_marcar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="false"
-                    android:layout_below="@+id/detalhe_evento_preco"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/styled_button"
-                    android:text="Marcar presença" />
 
             </RelativeLayout>
         </LinearLayout>

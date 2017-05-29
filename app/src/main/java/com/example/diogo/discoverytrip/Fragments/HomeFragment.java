@@ -79,13 +79,6 @@ public class HomeFragment extends Fragment implements LocationListener {
                     HomeActivity activity = (HomeActivity) getActivity();
                     activity.changeFragment(new DetalhesEventoFragment());
                 }
-                else{
-                    DetalhesPontoTuristicoFragment.pontoTuristico = atracao;
-                    DetalhesPontoTuristicoFragment.visualizationType = VisualizationType.Visualizar;
-
-                    HomeActivity activity = (HomeActivity) getActivity();
-                    activity.changeFragment(new DetalhesPontoTuristicoFragment());
-                }
             }
         });
         searchText  = (EditText) rootView.findViewById(R.id.pnt_search_edt);
