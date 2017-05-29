@@ -88,8 +88,6 @@ public class HomeFragment extends Fragment implements LocationListener {
         atracoes.add(atracao);
         atracoes.add(atracao);
         atracoes.add(atracao);
-        atracoes.add(atracao);
-        atracoes.add(atracao);
         ListAdapterOferta adapter = new ListAdapterOferta(getActivity(),
                 atracoes);
         listView.setAdapter(adapter);

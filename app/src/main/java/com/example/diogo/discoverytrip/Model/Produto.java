@@ -17,11 +17,14 @@ public class Produto {
     @SerializedName("")
     private String descricao;
 
-    public Produto(String descricao, float valorUn, String unidade){
+    @SerializedName("")
+    private String codigoBarras;
+
+    public Produto(String codigoBarras, String descricao, float valorUn, String unidade){
         this.descricao = descricao;
         this.valorUn = valorUn;
         this.unidade = unidade;
-
+        this.codigoBarras = codigoBarras;
     }
 
     public float getValorUn() {
@@ -34,5 +37,9 @@ public class Produto {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public String getCodigoBarras() {
+        return codigoBarras;
     }
 }

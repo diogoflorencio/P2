@@ -5,17 +5,24 @@ import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
+import com.example.diogo.discoverytrip.Model.Oferta;
+import com.example.diogo.discoverytrip.Model.Produto;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.Util.Barcode_Detector.BarcodeTrackerFactory;
 import com.example.diogo.discoverytrip.Util.CallBack;
 import com.example.diogo.discoverytrip.Util.Camera_Views.CameraSourcePreview;
 import com.example.diogo.discoverytrip.Util.Camera_Views.GraphicOverlay;
+import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LeitorCodigoBarrasActivity extends AppCompatActivity implements CallBack{
 
@@ -55,6 +62,7 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
                 showReadDialog(cod);
             }
         });
+        stopCameraSource();
     }
 
     public void startCameraSource() {
@@ -84,12 +92,25 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
     private void showReadDialog(final String codigo){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        Produto produto = mokup(codigo);
+
         builder.setTitle("Código identificado!");
-        builder.setMessage("Código de barras: "+codigo);
+
+        View view = getLayoutInflater().inflate(R.layout.dialog_ler_produto,null,true);
+        TextView cod = (TextView) view.findViewById(R.id.dialog_ler_produto_codigo);
+        TextView descricao = (TextView) view.findViewById(R.id.dialog_ler_produto_descricao);
+        TextView preco = (TextView) view.findViewById(R.id.dialog_ler_produto_preco);
+
+        cod.setText(codigo);
+        descricao.setText(produto.getDescricao());
+        preco.setText(String.valueOf(produto.getValorUn()));
+
+        builder.setView(view);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 startCameraSource();
                 dialog.dismiss();
             }
@@ -104,7 +125,6 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
         builder.setCancelable(false);
         AlertDialog dialog = builder.create();
         dialog.show();
-        stopCameraSource();
     }
 
     private void releaseCameraSource(){
@@ -122,5 +142,9 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
         super.onDestroy();
     }
 
+    private Produto mokup(String cod){
 
+        Produto produto = new Produto(cod,"Teste",15.2f,"Un");
+        return produto;
+    }
 }

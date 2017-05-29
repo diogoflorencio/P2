@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="Cod:"
+            android:textColor="@color/cast_expanded_controller_background_color" />
+
+        <TextView
+            android:id="@+id/dialog_ler_produto_descricao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/dialog_ler_produto_preco"
+            android:layout_alignBottom="@+id/dialog_ler_produto_preco"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="5dp"
+            android:text="Valor: R$"
+            android:textColor="@color/cast_expanded_controller_background_color" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView5"
+            android:layout_marginTop="5dp"
+            android:text="Descriçao do produto"
+            android:textColor="@color/cast_expanded_controller_background_color" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/dialog_ler_produto_descricao"
+            android:layout_marginTop="5dp"
+            android:text="Quantidade:"
+            android:textColor="@color/cast_expanded_controller_background_color" />
+
+        <TextView
+            android:id="@+id/dialog_ler_produto_preco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView10"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/dialog_ler_produto_descricao"
+            android:layout_toRightOf="@+id/dialog_ler_produto_descricao"
+            android:text="0,00"
+            android:textColor="@color/cast_expanded_controller_background_color" />
+
+        <TextView
+            android:id="@+id/dialog_ler_produto_codigo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/textView5"
+            android:layout_toRightOf="@+id/textView5"
+            android:text="78912054638"
+            android:textColor="@color/cast_expanded_controller_background_color" />
+
+        <EditText
+            android:id="@+id/dialog_ler_produto_quantidade"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView12"
+            android:layout_below="@+id/dialog_ler_produto_preco"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/textView12"
+            android:layout_toRightOf="@+id/textView12"
+            android:ems="10"
+            android:inputType="number" />
+
+    </RelativeLayout>
+</LinearLayout>
