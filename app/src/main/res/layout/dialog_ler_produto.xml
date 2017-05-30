@@ -49,7 +49,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/dialog_ler_produto_descricao"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:text="Quantidade:"
             android:textColor="@color/cast_expanded_controller_background_color" />
 
@@ -75,16 +75,18 @@
             android:textColor="@color/cast_expanded_controller_background_color" />
 
         <EditText
-            android:id="@+id/dialog_ler_produto_quantidade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/dialog_ler_produto_qtd"
+            android:layout_width="50dp"
+            android:layout_height="37dp"
+            android:layout_alignBaseline="@+id/textView12"
             android:layout_alignBottom="@+id/textView12"
-            android:layout_below="@+id/dialog_ler_produto_preco"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/textView12"
             android:layout_toRightOf="@+id/textView12"
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="number"
+            android:text="1"
+            android:textColor="@color/cast_expanded_controller_background_color"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 </LinearLayout>
