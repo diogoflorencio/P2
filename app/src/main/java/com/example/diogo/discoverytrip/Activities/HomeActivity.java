@@ -147,7 +147,7 @@ public class HomeActivity extends AppCompatActivity
         if(extras !=null) {
             fragment.setArguments(extras);
         }
-        fragmentManager.setCustomAnimations(R.anim.left_in, R.anim.right_out);
+        //fragmentManager.setCustomAnimations(R.anim.left_in, R.anim.right_out);
         fragmentManager.replace(R.id.content_home, fragment);
         fragmentManager.addToBackStack(null);
         fragmentManager.commit();
