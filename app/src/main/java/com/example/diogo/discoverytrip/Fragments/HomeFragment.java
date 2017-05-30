@@ -21,7 +21,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
-import com.example.diogo.discoverytrip.DataBase.AcessToken;
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
@@ -77,21 +76,22 @@ public class HomeFragment extends Fragment implements LocationListener {
         });
         searchText  = (EditText) rootView.findViewById(R.id.pnt_search_edt);
         searchOK = (Button) rootView.findViewById(R.id.pnt_search_ok_btn);
-//        searchOK.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+        searchOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                search();
-//            }
-//        });
+                fillOfertas();
+            }
+        });
 
 //        mokup();
-        fillOfertas();
+
         return rootView;
     }
 
     private void fillOfertas() {
-        String token = AcessToken.recuperar(getActivity().getSharedPreferences("acessToken", Context.MODE_PRIVATE));
-        ApiClient.API_SERVICE.ofertas("Bearer " + token).enqueue(new Callback<List<Oferta>>() {
+        String marketId = "592d06c555d2ff000495efb5"; // FIXME precisa de refatoração
+        ApiClient.API_SERVICE.ofertas(marketId).enqueue(new Callback<List<Oferta>>() {
             @Override
             public void onResponse(Call<List<Oferta>> call, Response<List<Oferta>> response) {
                 listView.setAdapter(new ListAdapterOferta(getActivity(), response.body()));

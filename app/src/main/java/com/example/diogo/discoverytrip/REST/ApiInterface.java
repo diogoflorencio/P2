@@ -4,23 +4,12 @@ package com.example.diogo.discoverytrip.REST;
 import com.example.diogo.discoverytrip.Model.Oferta;
 
 import java.util.List;
-import java.util.Map;
 
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * Created by Renato on 11/12/2016.
@@ -119,6 +108,6 @@ public interface ApiInterface {
 //    @GET("/api/search/name")
 //    Call<SearchResponse> search(@Header("Authorization") String token, @Query("text") String text);
 
-    @GET("/api/ofertas")
-    Call<List<Oferta>> ofertas(@Header("Authorization") String token);
+    @GET("/api/market/{id}/product")
+    Call<List<Oferta>> ofertas(@Path("id") String markedId);
 }

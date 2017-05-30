@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ApiClient {
-    public static final String BASE_URL = "https://discovery-trip-api.herokuapp.com/";
+    public static final String BASE_URL = "https://panfletoeletronico.herokuapp.com/";
     private static Retrofit retrofit = null;
     public static final ApiInterface API_SERVICE = ApiClient.getClient().create(ApiInterface.class);
 
