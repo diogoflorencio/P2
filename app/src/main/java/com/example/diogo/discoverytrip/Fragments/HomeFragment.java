@@ -18,14 +18,21 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
+import com.example.diogo.discoverytrip.DataBase.AcessToken;
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
+import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -76,9 +83,26 @@ public class HomeFragment extends Fragment implements LocationListener {
 //                search();
 //            }
 //        });
-        mokup();
 
+//        mokup();
+        fillOfertas();
         return rootView;
+    }
+
+    private void fillOfertas() {
+        String token = AcessToken.recuperar(getActivity().getSharedPreferences("acessToken", Context.MODE_PRIVATE));
+        ApiClient.API_SERVICE.ofertas("Bearer " + token).enqueue(new Callback<List<Oferta>>() {
+            @Override
+            public void onResponse(Call<List<Oferta>> call, Response<List<Oferta>> response) {
+                listView.setAdapter(new ListAdapterOferta(getActivity(), response.body()));
+            }
+
+            @Override
+            public void onFailure(Call<List<Oferta>> call, Throwable t) {
+                Toast.makeText(getContext(), "Não foi possível encontrar as ofertas no momento.", Toast.LENGTH_SHORT).show();
+                Log.e("GET ofertas", t.getMessage());
+            }
+        });
     }
 
     private void mokup(){
