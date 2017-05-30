@@ -8,13 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.diogo.discoverytrip.Activities.LeitorCodigoBarrasActivity;
 import com.example.diogo.discoverytrip.Model.ItemCompra;
-import com.example.diogo.discoverytrip.Model.Produto;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.Util.ListAdapterItemCompra;
-import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,8 @@ public class Carrinho extends Fragment implements View.OnClickListener {
 
     private List<ItemCompra> produtosLidos;
     private ListView lVProdutos;
+    private TextView tVTotal;
+    private float total;
 
     public Carrinho() {
         // Required empty public constructor
@@ -61,6 +62,8 @@ public class Carrinho extends Fragment implements View.OnClickListener {
 
         produtosLidos = new ArrayList<>();
         lVProdutos = (ListView) view.findViewById(R.id.carrinho_list_produtos);
+        tVTotal =(TextView) view.findViewById(R.id.carrinho_total);
+        total = 0f;
 
         return view;
     }
@@ -73,8 +76,12 @@ public class Carrinho extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         ItemCompra item = (ItemCompra) data.getExtras().get("Item");
+        total += item.getQuantidade()*item.getProduto().getValorUn();
+
         produtosLidos.add(item);
         ListAdapterItemCompra adapter = new ListAdapterItemCompra(getActivity(), produtosLidos);
         lVProdutos.setAdapter(adapter);
+
+        tVTotal.setText(String.valueOf(total));
     }
 }
