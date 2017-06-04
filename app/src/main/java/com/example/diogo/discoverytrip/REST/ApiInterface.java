@@ -1,9 +1,6 @@
 package com.example.diogo.discoverytrip.REST;
 
 
-import com.example.diogo.discoverytrip.Model.Oferta;
-
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -118,7 +115,4 @@ public interface ApiInterface {
 //
 //    @GET("/api/search/name")
 //    Call<SearchResponse> search(@Header("Authorization") String token, @Query("text") String text);
-
-    @GET("/api/ofertas")
-    Call<List<Oferta>> ofertas(@Header("Authorization") String token);
 }
