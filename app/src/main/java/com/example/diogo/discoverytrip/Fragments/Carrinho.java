@@ -75,6 +75,10 @@ public class Carrinho extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != 465){
+            return;
+        }
+
         ItemCompra item = (ItemCompra) data.getExtras().get("Item");
         total += item.getQuantidade()*item.getProduto().getValorUn();
 

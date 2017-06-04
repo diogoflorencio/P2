@@ -65,9 +65,7 @@ public class CameraSourcePreview extends ViewGroup {
 
     public void release() {
         if (mCameraSource != null) {
-            Log.d("Logger camera","Before release");
             mCameraSource.release();
-            Log.d("Logger camera","After release");
             mCameraSource = null;
         }
     }

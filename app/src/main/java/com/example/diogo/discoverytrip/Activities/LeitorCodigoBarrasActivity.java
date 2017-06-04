@@ -44,16 +44,6 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
 
         mPreview = (CameraSourcePreview) findViewById(R.id.leitor_codigo_barras_cameraContent);
         mOverlay = (GraphicOverlay) findViewById(R.id.leitor_codigo_barras_cameraView);
-        barcodeDetector = new BarcodeDetector.Builder(this)
-                .build();
-        barcodeFactory = new BarcodeTrackerFactory(mOverlay, this);
-        barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
-        cameraBuilder = new CameraSource.Builder(this, barcodeDetector)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setAutoFocusEnabled(true);
-
-        mCameraSource = cameraBuilder.build();
-        startCameraSource();
     }
 
     @Override
@@ -69,7 +59,17 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
     }
 
     public void startCameraSource() {
-        Log.d("Logger camera","Start");
+        barcodeDetector = new BarcodeDetector.Builder(this)
+                .build();
+        barcodeFactory = new BarcodeTrackerFactory(mOverlay, this);
+        barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
+        cameraBuilder = new CameraSource.Builder(this, barcodeDetector)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setAutoFocusEnabled(true);
+
+        mCameraSource = cameraBuilder.build();
+
+        Log.d("LoggerCamera","start");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -81,6 +81,7 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
                 }
             }
         });
+        Log.d("LoggerCamera","started");
     }
 
     public void stopCameraSource(){
@@ -97,18 +98,16 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
 
         final Produto produto = mokup(codigo);
 
-        builder.setTitle("Código identificado!");
-
         View view = getLayoutInflater().inflate(R.layout.dialog_ler_produto,null,true);
         TextView cod = (TextView) view.findViewById(R.id.dialog_ler_produto_codigo);
         TextView descricao = (TextView) view.findViewById(R.id.dialog_ler_produto_descricao);
         TextView preco = (TextView) view.findViewById(R.id.dialog_ler_produto_preco);
-        final EditText quantidade = (EditText) view.findViewById(R.id.dialog_ler_produto_quantidade);
+        final EditText quantidade = (EditText) view.findViewById(R.id.dialog_ler_produto_qtd);
 
         cod.setText(codigo);
         descricao.setText(produto.getDescricao());
         preco.setText(String.valueOf(produto.getValorUn()));
-
+        builder.setCancelable(false);
         builder.setView(view);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
@@ -135,23 +134,32 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
     }
 
     private void releaseCameraSource(){
+        Log.d("LoggerCamera","release");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 mPreview.release();
             }
         }).start();
-    }
-
-    @Override
-    public void onDestroy(){
-        releaseCameraSource();
-        super.onDestroy();
+        Log.d("LoggerCamera","released");
     }
 
     private Produto mokup(String cod){
 
         Produto produto = new Produto(cod,"Teste",15.2f,"Un");
         return produto;
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d("LoggerCamera","onPause");
+        releaseCameraSource();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        startCameraSource();
     }
 }
