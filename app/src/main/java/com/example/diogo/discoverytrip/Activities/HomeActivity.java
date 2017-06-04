@@ -32,14 +32,11 @@ import me.drakeet.materialdialog.MaterialDialog;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String EVENT_TYPE = "Event";
+//    public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
     private NavigationView navigationView;
     public static final int REQUEST_PERMISSIONS_CODE = 128;
-
     private MaterialDialog mMaterialDialog;
-
-
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -76,20 +73,15 @@ public class HomeActivity extends AppCompatActivity
 
         @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         Log.d("Logger", "Home onOptionsItemSelected");
         int id = item.getItemId();
-
         switch (id) {
             case R.id.logout:
                 Log.d("Logger", "Home logout");
-//                WIFIManager wf = new WIFIManager(this.getApplication());
+                WIFIManager wf = new WIFIManager(this.getApplication());
+                Log.d("Logger", "isConnected() "+wf.isConnected());
 //                wf.enableWifi();
-//                android.net.wifi.WifiManager wifiManager =
-//                        (android.net.wifi.WifiManager) getApplicationContext().getSystemService(getApplicationContext().WIFI_SERVICE);
-//                wf.requestWIFIConnection("+_+","mini@casadebaixo1");
+//                wf.requestWIFIConnection("+_+","mini@casadebaixo");
 
                 finish();
                 return true;
@@ -168,7 +160,7 @@ public class HomeActivity extends AppCompatActivity
     private void permission(){
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             callDialog("O aplicativo xxx necessita de acesso a camera para leitura de produtos por código de barras",
-                    new String[]{Manifest.permission.CAMERA});
+                    new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE});
         }
     }
 
