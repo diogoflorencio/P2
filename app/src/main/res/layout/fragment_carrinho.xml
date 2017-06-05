@@ -20,9 +20,8 @@
             android:id="@+id/carrinho_logo_supermercado"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_alignLeft="@+id/relativeLayout"
-            android:layout_alignStart="@+id/relativeLayout"
-            android:layout_alignTop="@+id/relativeLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             app:srcCompat="@mipmap/icon" />
 
         <TextView
