@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
@@ -36,7 +35,7 @@ public class HomeActivity extends AppCompatActivity
     private int currentScreen = 0;
     private NavigationView navigationView;
     public static final int REQUEST_PERMISSIONS_CODE = 128;
-    private MaterialDialog mMaterialDialog;
+
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -159,29 +158,8 @@ public class HomeActivity extends AppCompatActivity
 
     private void permission(){
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            callDialog("O aplicativo xxx necessita de acesso a camera para leitura de produtos por código de barras",
-                    new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE});
+            ActivityCompat.requestPermissions(HomeActivity.this,  new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE},
+                    REQUEST_PERMISSIONS_CODE);
         }
-    }
-
-    private void callDialog( String message, final String[] permissions ){
-        mMaterialDialog = new MaterialDialog(this)
-                .setTitle("Permission")
-                .setMessage( message )
-                .setPositiveButton("Ok", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        ActivityCompat.requestPermissions(HomeActivity.this, permissions, REQUEST_PERMISSIONS_CODE);
-                        mMaterialDialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Cancel", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mMaterialDialog.dismiss();
-                    }
-                });
-        mMaterialDialog.show();
     }
 }
