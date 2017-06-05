@@ -17,11 +17,16 @@ import android.util.Log;
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
 import com.example.diogo.discoverytrip.R;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * Created by diogo on 21/05/17.
  */
 
 public class ServiceNotificacao extends Service {
+
+    private  static boolean run = false;
+    private static Semaphore semaphore =  new Semaphore(1);
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -30,8 +35,8 @@ public class ServiceNotificacao extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-       // enviaNotificacao();
-        Log.d("Logger","Service Notificação");
+        enviaNotificacao();
+        Log.d("Logger","Service Notificação enviando notificação");
         return START_STICKY;
     }
 
@@ -62,5 +67,6 @@ public class ServiceNotificacao extends Service {
         }catch (Exception e){
             e.printStackTrace();
         }
+        run= false;
     }
 }

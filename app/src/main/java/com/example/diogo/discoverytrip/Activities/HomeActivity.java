@@ -1,9 +1,12 @@
 package com.example.diogo.discoverytrip.Activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -14,11 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.Util.WIFIManager;
+
+import me.drakeet.materialdialog.MaterialDialog;
 
 /**
  * Classe activity responsavel pela activity home (principal) na aplicação
@@ -26,10 +32,11 @@ import com.example.diogo.discoverytrip.Util.WIFIManager;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String EVENT_TYPE = "Event";
+//    public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
     private NavigationView navigationView;
-
+    public static final int REQUEST_PERMISSIONS_CODE = 128;
+    private MaterialDialog mMaterialDialog;
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -52,6 +59,8 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         createHomeFragment();
+
+        permission();
     }
 
     @Override
@@ -64,22 +73,17 @@ public class HomeActivity extends AppCompatActivity
 
         @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         Log.d("Logger", "Home onOptionsItemSelected");
         int id = item.getItemId();
-
         switch (id) {
             case R.id.logout:
                 Log.d("Logger", "Home logout");
                 WIFIManager wf = new WIFIManager(this.getApplication());
-                wf.enableWifi();
-                android.net.wifi.WifiManager wifiManager =
-                        (android.net.wifi.WifiManager) getApplicationContext().getSystemService(getApplicationContext().WIFI_SERVICE);
-                wf.requestWIFIConnection("+_+","mini@casadebaixo1");
+                Log.d("Logger", "isConnected() "+wf.isConnected());
+//                wf.enableWifi();
+//                wf.requestWIFIConnection("+_+","mini@casadebaixo");
 
-                //finish();
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -147,9 +151,37 @@ public class HomeActivity extends AppCompatActivity
         if(extras !=null) {
             fragment.setArguments(extras);
         }
-        fragmentManager.setCustomAnimations(R.anim.left_in, R.anim.right_out);
+        //fragmentManager.setCustomAnimations(R.anim.left_in, R.anim.right_out);
         fragmentManager.replace(R.id.content_home, fragment);
         fragmentManager.addToBackStack(null);
         fragmentManager.commit();
+    }
+
+    private void permission(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            callDialog("O aplicativo xxx necessita de acesso a camera para leitura de produtos por código de barras",
+                    new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE});
+        }
+    }
+
+    private void callDialog( String message, final String[] permissions ){
+        mMaterialDialog = new MaterialDialog(this)
+                .setTitle("Permission")
+                .setMessage( message )
+                .setPositiveButton("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        ActivityCompat.requestPermissions(HomeActivity.this, permissions, REQUEST_PERMISSIONS_CODE);
+                        mMaterialDialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMaterialDialog.dismiss();
+                    }
+                });
+        mMaterialDialog.show();
     }
 }
