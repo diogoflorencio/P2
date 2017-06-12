@@ -1,9 +1,12 @@
 package com.example.diogo.discoverytrip.Activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -20,15 +23,18 @@ import com.example.diogo.discoverytrip.Fragments.HomeFragment;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.Util.WIFIManager;
 
+import me.drakeet.materialdialog.MaterialDialog;
+
 /**
  * Classe activity responsavel pela activity home (principal) na aplicação
  */
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String EVENT_TYPE = "Event";
+//    public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
     private NavigationView navigationView;
+    public static final int REQUEST_PERMISSIONS_CODE = 128;
 
 
     /**
@@ -52,6 +58,8 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         createHomeFragment();
+
+        permission();
     }
 
     @Override
@@ -64,22 +72,17 @@ public class HomeActivity extends AppCompatActivity
 
         @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         Log.d("Logger", "Home onOptionsItemSelected");
         int id = item.getItemId();
-
         switch (id) {
             case R.id.logout:
                 Log.d("Logger", "Home logout");
                 WIFIManager wf = new WIFIManager(this.getApplication());
-                wf.enableWifi();
-                android.net.wifi.WifiManager wifiManager =
-                        (android.net.wifi.WifiManager) getApplicationContext().getSystemService(getApplicationContext().WIFI_SERVICE);
-                wf.requestWIFIConnection("+_+","mini@casadebaixo1");
+                Log.d("Logger", "isConnected() "+wf.isConnected());
+//                wf.enableWifi();
+//                wf.requestWIFIConnection("+_+","mini@casadebaixo");
 
-                //finish();
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -151,5 +154,12 @@ public class HomeActivity extends AppCompatActivity
         fragmentManager.replace(R.id.content_home, fragment);
         fragmentManager.addToBackStack(null);
         fragmentManager.commit();
+    }
+
+    private void permission(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(HomeActivity.this,  new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE},
+                    REQUEST_PERMISSIONS_CODE);
+        }
     }
 }

@@ -4,6 +4,7 @@ package com.example.diogo.discoverytrip.REST;
 import com.example.diogo.discoverytrip.Model.Oferta;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

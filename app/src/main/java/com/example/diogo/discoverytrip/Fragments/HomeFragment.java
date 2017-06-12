@@ -83,9 +83,7 @@ public class HomeFragment extends Fragment implements LocationListener {
                 fillOfertas();
             }
         });
-
 //        mokup();
-
         return rootView;
     }
 
