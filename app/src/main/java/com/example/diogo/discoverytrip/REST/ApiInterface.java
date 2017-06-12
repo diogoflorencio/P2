@@ -2,9 +2,9 @@ package com.example.diogo.discoverytrip.REST;
 
 
 import com.example.diogo.discoverytrip.Model.Oferta;
+import com.example.diogo.discoverytrip.REST.ServerResponses.MarketResponse;
 
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -111,4 +111,7 @@ public interface ApiInterface {
 
     @GET("/api/market/{id}/product")
     Call<List<Oferta>> ofertas(@Path("id") String markedId);
+
+    @GET("/api/markets")
+    Call<MarketResponse> mercados();
 }
