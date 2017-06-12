@@ -52,8 +52,8 @@ public class HomeActivity extends AppCompatActivity
     private int currentScreen = 0;
     private NavigationView navigationView;
     public static final int REQUEST_PERMISSIONS_CODE = 128;
-    private MaterialDialog mMaterialDialog;
 
+    private MaterialDialog mMaterialDialog;
     private LocationManager locationManager;
     private static final int REQUEST_LOCATION = 2;
     private boolean get = true;
@@ -182,8 +182,8 @@ public class HomeActivity extends AppCompatActivity
 
     private void permission(){
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            callDialog("O aplicativo xxx necessita de acesso a camera para leitura de produtos por código de barras",
-                    new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE});
+            ActivityCompat.requestPermissions(HomeActivity.this,  new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE},
+                    REQUEST_PERMISSIONS_CODE);
         }
     }
 
