@@ -203,7 +203,6 @@ public class HomeActivity extends AppCompatActivity
         mMaterialDialog.show();
     }
 
-
     @Override
     public void onDestroy() {
         Log.d("Logger", "LocalizacaoFragment onDestroy");

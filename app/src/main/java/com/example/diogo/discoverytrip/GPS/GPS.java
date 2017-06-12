@@ -24,10 +24,11 @@ public class GPS implements LocationListener {
     private static LocationManager locationManager;
     private static final int REQUEST_LOCATION = 2;
 
-    public GPS(GPSClient gpsClient, Activity activity){
-        clients = new ArrayList<>();
-        startGPS(activity);
-
+    public GPS(Activity activity){
+        if(locationManager == null){
+            clients = new ArrayList<>();
+            startGPS(activity);
+        }
     }
 
     public void addClient(GPSClient gpsClient){
