@@ -5,4 +5,6 @@ package com.example.diogo.discoverytrip.REST.ServerResponses;
  */
 
 public class ServerResponse {
+
+
 }

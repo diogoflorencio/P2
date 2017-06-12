@@ -40,6 +40,7 @@ public class HomeFragment extends Fragment implements LocationListener {
     private boolean get = true;
     private Button searchOK;
     private EditText searchText;
+    private boolean gpsEnabled;
 
     public HomeFragment() {
         // Required empty public constructor

@@ -1,8 +1,13 @@
 package com.example.diogo.discoverytrip.Activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -18,25 +23,41 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
 import com.example.diogo.discoverytrip.R;
+import com.example.diogo.discoverytrip.REST.ApiClient;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
+import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
 import com.example.diogo.discoverytrip.Util.WIFIManager;
 
+import java.io.IOException;
+
 import me.drakeet.materialdialog.MaterialDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Classe activity responsavel pela activity home (principal) na aplicação
  */
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
 //    public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
     private NavigationView navigationView;
     public static final int REQUEST_PERMISSIONS_CODE = 128;
     private MaterialDialog mMaterialDialog;
+
+    private LocationManager locationManager;
+    private static final int REQUEST_LOCATION = 2;
+    private boolean get = true;
+    private double latitude, longitude;
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -61,6 +82,8 @@ public class HomeActivity extends AppCompatActivity
         createHomeFragment();
 
         permission();
+
+        startGPS();
     }
 
     @Override
@@ -183,5 +206,111 @@ public class HomeActivity extends AppCompatActivity
                     }
                 });
         mMaterialDialog.show();
+    }
+
+    private void startGPS() {
+        Log.d("Logger", "LocalizacaoFragment startGPS");
+        locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        //permissão de GPS
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) ;
+                // Esperando usuário autorizar permissão
+            else
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_LOCATION);
+        } else
+        if(verificaConexao())
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) this);
+        else
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+        if(get){
+
+            Log.d("Logger","Location search latitude: "+latitude+" longitude: "+longitude);
+            get = false;
+            Call<Market> call = ApiClient.API_SERVICE.getMarketByLocation(latitude, longitude,100);
+            call.enqueue(new Callback<Market>() {
+                @Override
+                public void onResponse(Call<Market> call, Response<Market> response) {
+                    if(response.isSuccessful()){
+
+                    }
+                    else{
+                        try {
+                            ErrorResponse error = ApiClient.errorBodyConverter.convert(response.errorBody());
+                            Log.e("Logger", "Pesquisa de atrações "+error.getErrorDescription());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Market> call, Throwable t) {
+                    get = true;
+                    Log.e("Logger","Pesquisa de pontos turisticos error: "+t.toString());
+                    Toast.makeText(HomeActivity.this,"Erro ao se conectar com o servidor!",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private boolean verificaConexao() {
+        //verificando se o dispositivo tem conexão com internet
+        ConnectivityManager conectivtyManager =
+                (ConnectivityManager) this.getSystemService(this.CONNECTIVITY_SERVICE);
+        if (conectivtyManager.getActiveNetworkInfo() != null
+                && conectivtyManager.getActiveNetworkInfo().isAvailable()
+                && conectivtyManager.getActiveNetworkInfo().isConnected())
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("Logger", "LocalizacaoFragment onDestroy");
+        super.onDestroy();
+        stopGPS();
+    }
+
+    private void stopGPS(){
+        //permissão de GPS
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) ;
+                // Esperando usuário autorizar permissão
+            else
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_LOCATION);
+        } else locationManager.removeUpdates(this);
     }
 }
