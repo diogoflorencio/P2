@@ -1,6 +1,5 @@
 package com.example.diogo.discoverytrip.Fragments;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,29 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
-import com.example.diogo.discoverytrip.GPS.GPS;
-import com.example.diogo.discoverytrip.GPS.GPSClient;
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
-import com.example.diogo.discoverytrip.REST.ApiClient;
-import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
 import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-
 /**
  * Classe fragment responsavel pelo fragmento inicial (home) na aplicação
  */
-public class HomeFragment extends Fragment implements GPSClient {
+
+public class HomeFragment extends Fragment {
 
     private ListView listView;
-    private boolean get = false;
-    private int distance = 100;
     private Button searchOK;
     private EditText searchText;
 
@@ -72,10 +61,7 @@ public class HomeFragment extends Fragment implements GPSClient {
 //                search();
 //            }
 //        });
-        GPS gps = new GPS(this.getActivity());
-        gps.addClient(this);
         mokup();
-
         return rootView;
     }
 
@@ -95,42 +81,5 @@ public class HomeFragment extends Fragment implements GPSClient {
     public void onDestroy() {
         Log.d("Logger", "LocalizacaoFragment onDestroy");
         super.onDestroy();
-    }
-
-    @Override
-    public void locationChange(Location location) {
-        if(!get){
-            Call<Market> call  = ApiClient.API_SERVICE.getMarketByLocation(location.getLatitude(),
-                    location.getLongitude(),distance);
-            call.enqueue(new Callback<Market>() {
-                @Override
-                public void onResponse(Call<Market> call, Response<Market> response) {
-                    if(response.isSuccessful()){
-                        getItems(response.body());
-                    }else {
-                        
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Market> call, Throwable t) {
-
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    private void getItems(Market market){
-
     }
 }
