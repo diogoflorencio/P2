@@ -21,15 +21,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
-import com.example.diogo.discoverytrip.Model.Market;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
-import com.example.diogo.discoverytrip.REST.ServerResponses.MarketResponse;
+import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseAllMarkets;
 import com.example.diogo.discoverytrip.Util.WIFIManager;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +47,8 @@ public class HomeActivity extends AppCompatActivity
     private NavigationView navigationView;
     public static final int REQUEST_PERMISSIONS_CODE = 128;
 
+    private MaterialDialog mMaterialDialog;
+    private boolean get = true;
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -56,13 +60,11 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -70,7 +72,6 @@ public class HomeActivity extends AppCompatActivity
             selectMarket(this);
 
         createHomeFragment();
-
         permission();
     }
 
@@ -88,10 +89,9 @@ public class HomeActivity extends AppCompatActivity
                 .create();
 
         loading.show();
-        ApiClient.API_SERVICE.mercados().enqueue(new Callback<MarketResponse>() {
+        ApiClient.API_SERVICE.getAllMarkets().enqueue(new Callback<ResponseAllMarkets>() {
             @Override
-            public void onResponse(Call<MarketResponse> call, Response<MarketResponse> response) {
-
+            public void onResponse(Call<ResponseAllMarkets> call, Response<ResponseAllMarkets> response) {
                 loading.dismiss();
 
                 final String[] options = new String[response.body().getMarkets().size()];
@@ -116,7 +116,8 @@ public class HomeActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<MarketResponse> call, Throwable t) {
+            public void onFailure(Call<ResponseAllMarkets> call, Throwable t) {
+
             }
         });
 
@@ -218,9 +219,41 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void permission(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(HomeActivity.this,  new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE},
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(HomeActivity.this,  new String[]{Manifest.permission.CAMERA,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_PERMISSIONS_CODE);
         }
+
+    }
+
+    private void callDialog( String message, final String[] permissions ){
+        mMaterialDialog = new MaterialDialog(this)
+                .setTitle("Permission")
+                .setMessage( message )
+                .setPositiveButton("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        ActivityCompat.requestPermissions(HomeActivity.this, permissions, REQUEST_PERMISSIONS_CODE);
+                        mMaterialDialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMaterialDialog.dismiss();
+                    }
+                });
+        mMaterialDialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("Logger", "LocalizacaoFragment onDestroy");
+        super.onDestroy();
     }
 }

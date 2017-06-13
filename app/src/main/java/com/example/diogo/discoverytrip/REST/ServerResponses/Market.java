@@ -1,14 +1,14 @@
-package com.example.diogo.discoverytrip.Model;
+package com.example.diogo.discoverytrip.REST.ServerResponses;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by gervasio on 6/12/17.
+ * Created by renato on 11/06/17.
  */
 
 public class Market {
 
-    @SerializedName("_id")
+    @SerializedName("id")
     private String id;
 
     @SerializedName("company")
@@ -17,27 +17,29 @@ public class Market {
     @SerializedName("manager")
     private String manager;
 
+    @SerializedName("address")
+    private Address address;
+
+    @SerializedName("network")
+    private MarketNetwork network;
+
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getCompany() {
         return company;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
     public String getManager() {
         return manager;
     }
 
-    public void setManager(String manager) {
-        this.manager = manager;
+    public Address getAddress() {
+        return address;
+    }
+
+    public MarketNetwork getNetwork() {
+        return network;
     }
 }

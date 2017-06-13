@@ -2,15 +2,16 @@ package com.example.diogo.discoverytrip.REST;
 
 
 import com.example.diogo.discoverytrip.Model.Oferta;
-import com.example.diogo.discoverytrip.REST.ServerResponses.MarketResponse;
+import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseAllMarkets;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseMarketItems;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Renato on 11/12/2016.
@@ -18,14 +19,14 @@ import retrofit2.http.Path;
  */
 public interface ApiInterface {
 
-//    @POST("api/users")
-//    Call<ServerResponse> cadastrarUsuario(@Body UsuarioEnvio usuarioEnvio);
-//
-//    @GET("api/users/")
-//    Call<ServerResponse> getUsuario(@Header("Authorization") String accessToken);
-//
-//    @PUT("api/users/")
-//    Call<ServerResponse> setUsuario(@Header("Authorization")String accessToken, @Body UsuarioEnvio usuarioEnvio);
+    @GET("/api/markets")
+    Call<ResponseAllMarkets> getAllMarkets();
+
+    @GET("api/markets/{id}/items")
+    Call<ResponseMarketItems> getMarketItems(@Path("id") String marketId);
+
+    @GET("api/market/search")
+    Call<Market> getMarketByLocation(@Query("lagitude") double latitude, @Query("longitude") double longitude, @Query("distance") int distance);
 //
 //    @POST("api/facebook/login")
 //    Call<LoginResponse> loginFacebook(@Body AccessTokenJson accessToken);
@@ -88,8 +89,8 @@ public interface ApiInterface {
 //    @GET("api/search/points")
 //    Call<SearchResponse> searchPontoTuristico(@Header("Authorization") String token, @Query("latitude") double latitude, @Query("longitude") double longitude, @Query("distance") int distance);
 //
-    @GET("api/images/{id}/download")
-    Call<ResponseBody> downloadFoto(@Header("Authorization") String token, @Path("id") String photoId);
+//    @GET("api/images/{id}/download")
+//    Call<ResponseBody> downloadFoto(@Header("Authorization") String token, @Path("id") String photoId);
 //
 //    @GET("/api/points")
 //    Call<SearchResponse> userPoints(@Header("Authorization") String accessToken);
@@ -111,7 +112,4 @@ public interface ApiInterface {
 
     @GET("/api/market/{id}/product")
     Call<List<Oferta>> ofertas(@Path("id") String markedId);
-
-    @GET("/api/markets")
-    Call<MarketResponse> mercados();
 }
