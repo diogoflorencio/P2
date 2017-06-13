@@ -38,6 +38,9 @@ public class Item {
     @SerializedName("preminum")
     private String premium;
 
+    @SerializedName("market")
+    private String market;
+
     public String getType() {
         return type;
     }
@@ -76,5 +79,13 @@ public class Item {
 
     public String getPremium() {
         return premium;
+    }
+
+    public String getMarket() {
+        return market;
+    }
+
+    public void setMarket(String market) {
+        this.market = market;
     }
 }

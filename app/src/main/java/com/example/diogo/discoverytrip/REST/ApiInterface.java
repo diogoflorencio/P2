@@ -109,7 +109,4 @@ public interface ApiInterface {
 //
 //    @GET("/api/search/name")
 //    Call<SearchResponse> search(@Header("Authorization") String token, @Query("text") String text);
-
-    @GET("/api/market/{id}/product")
-    Call<List<Oferta>> ofertas(@Path("id") String markedId);
 }

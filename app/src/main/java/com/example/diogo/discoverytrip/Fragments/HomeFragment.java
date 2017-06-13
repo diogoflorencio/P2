@@ -16,15 +16,15 @@ import com.example.diogo.discoverytrip.Activities.HomeActivity;
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseMarketItems;
 import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Classe fragment responsavel pelo fragmento inicial (home) na aplicação
@@ -76,17 +76,25 @@ public class HomeFragment extends Fragment {
     }
 
     private void fillOfertas() {
-        String marketId = "592d06c555d2ff000495efb5"; // FIXME precisa de refatoração
-        ApiClient.API_SERVICE.ofertas(marketId).enqueue(new Callback<List<Oferta>>() {
+        if (!HomeActivity.hasMarket(getActivity())) {
+            return;
+        }
+
+        String marketId = HomeActivity.getMarket(getActivity());
+        ApiClient.API_SERVICE.getMarketItems(marketId).enqueue(new Callback<ResponseMarketItems>() {
             @Override
-            public void onResponse(Call<List<Oferta>> call, Response<List<Oferta>> response) {
-                listView.setAdapter(new ListAdapterOferta(getActivity(), response.body()));
+            public void onResponse(Call<ResponseMarketItems> call, Response<ResponseMarketItems> response) {
+                if (response.code() > 400 || response.body().getStatus().equals("error")) {
+                    Toast.makeText(getContext(), "Não há ofertas registradas no momento.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                listView.setAdapter(new ListAdapterOferta(getActivity(), response.body().getItems()));
             }
 
             @Override
-            public void onFailure(Call<List<Oferta>> call, Throwable t) {
+            public void onFailure(Call<ResponseMarketItems> call, Throwable t) {
                 Toast.makeText(getContext(), "Não foi possível encontrar as ofertas no momento.", Toast.LENGTH_SHORT).show();
-                Log.e("GET ofertas", t.getMessage());
             }
         });
     }
@@ -98,9 +106,8 @@ public class HomeFragment extends Fragment {
         atracoes.add(atracao);
         atracoes.add(atracao);
         atracoes.add(atracao);
-        ListAdapterOferta adapter = new ListAdapterOferta(getActivity(),
-                atracoes);
-        listView.setAdapter(adapter);
+//        ListAdapterOferta adapter = new ListAdapterOferta(getActivity(),atracoes);
+//        listView.setAdapter(adapter);
     }
 
     @Override

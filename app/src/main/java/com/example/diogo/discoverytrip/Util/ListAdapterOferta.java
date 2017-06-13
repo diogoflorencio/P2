@@ -13,44 +13,39 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
-import com.example.diogo.discoverytrip.REST.ApiClient;
-import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
+import com.example.diogo.discoverytrip.REST.ServerResponses.Item;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-
-import okhttp3.ResponseBody;
 
 import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by renato on 07/02/17.
  */
-public class ListAdapterOferta extends ArrayAdapter<Oferta>{
+public class ListAdapterOferta extends ArrayAdapter<Item>{
     private List<View> views;
     private LayoutInflater inflater;
-    private List<Oferta> ofertas;
+    private List<Item> items;
     private Activity context;
     private SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private SimpleDateFormat nomalDateFormat = new SimpleDateFormat("dd/M/yyyy");
     private static Semaphore semaphore = new Semaphore(1);
     final static Handler handler = new Handler();
 
-    public ListAdapterOferta(Activity context, List<Oferta> itens){
-        super(context, R.layout.item_oferta,itens);
+    public ListAdapterOferta(Activity context, List<Item> items){
+        super(context, R.layout.item_oferta, items);
 
         this.inflater = context.getLayoutInflater();
-        this.ofertas = itens;
+        this.items = items;
         this.context = context;
         this.views = new ArrayList<>();
     }
@@ -62,17 +57,17 @@ public class ListAdapterOferta extends ArrayAdapter<Oferta>{
         }
 
         Log.d("Logger","getView "+position);
-        final Oferta oferta = ofertas.get(position);
+        final Item item = items.get(position);
         View view = inflater.inflate(R.layout.item_oferta, null, true);
         final ImageView foto = (ImageView) view.findViewById(R.id.iten_img);
 
         final TextView titulo  = (TextView) view.findViewById(R.id.iten_name);
         String photoId = null;
 
-        titulo.setText(oferta.getSupermercado());
-        Log.d("Logger","Supermercado "+oferta.getSupermercado());
+        titulo.setText(item.getMarket()); // FIXME refactor
+        Log.d("Logger", "Supermercado " + item.getMarket());
 
-        photoId = oferta.getFotoId();
+        photoId = item.getImageId();
         if(photoId != null) {
             final String finalPhotoId1 = photoId;
             new Thread(new Runnable() {
@@ -181,7 +176,7 @@ public class ListAdapterOferta extends ArrayAdapter<Oferta>{
     }
 
     @Override
-    public Oferta getItem(int position){
-        return ofertas.get(position);
+    public Item getItem(int position){
+        return items.get(position);
     }
 }

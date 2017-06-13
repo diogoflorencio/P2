@@ -68,19 +68,24 @@ public class HomeActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (!hasMarket())
+        if (!hasMarket(this))
             selectMarket(this);
 
         createHomeFragment();
         permission();
     }
 
-    private boolean hasMarket() {
-        return this.getSharedPreferences("panfleto_eletronico", MODE_PRIVATE).contains("market");
+    public static boolean hasMarket(Context context) {
+        return context.getSharedPreferences("panfleto_eletronico", MODE_PRIVATE).contains("market");
     }
 
-    private void setMarket(String id) {
-        this.getSharedPreferences("panfleto_eletronico", MODE_PRIVATE).edit().putString("market", id).apply();
+    public static String getMarket(Context context) {
+        return context.getSharedPreferences("panfleto_eletronico", MODE_PRIVATE).getString("market", "a");
+    }
+
+    public static void setMarket(Context context, String id) {
+        context.getSharedPreferences("panfleto_eletronico", MODE_PRIVATE).edit().putString("market", id).apply();
+        Log.v("set market", id);
     }
 
     private void selectMarket(final Context context) {
@@ -108,7 +113,7 @@ public class HomeActivity extends AppCompatActivity
                         .setItems(options, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                setMarket(optionsIds[which]);
+                                setMarket(HomeActivity.this, optionsIds[which]);
                             }
                         })
                         .create();

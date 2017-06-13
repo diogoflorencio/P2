@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Market {
 
-    @SerializedName("id")
+    @SerializedName("_id")
     private String id;
 
     @SerializedName("company")
