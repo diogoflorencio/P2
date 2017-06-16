@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
+import com.example.diogo.discoverytrip.GPS.GPSClient;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
@@ -40,13 +41,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 /**
  * Classe activity responsavel pela activity home (principal) na aplicação
  */
 public class HomeActivity extends AppCompatActivity
-        implements LocationListener, NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 //    public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
@@ -54,10 +53,7 @@ public class HomeActivity extends AppCompatActivity
     public static final int REQUEST_PERMISSIONS_CODE = 128;
 
     private MaterialDialog mMaterialDialog;
-    private LocationManager locationManager;
-    private static final int REQUEST_LOCATION = 2;
     private boolean get = true;
-    private double latitude, longitude;
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -69,21 +65,15 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         createHomeFragment();
-
         permission();
-
-        startGPS();
     }
 
     @Override
@@ -181,10 +171,15 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void permission(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(HomeActivity.this,  new String[]{Manifest.permission.CAMERA,Manifest.permission.CHANGE_WIFI_STATE},
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(HomeActivity.this,  new String[]{Manifest.permission.CAMERA,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_PERMISSIONS_CODE);
         }
+
     }
 
     private void callDialog( String message, final String[] permissions ){
@@ -208,109 +203,9 @@ public class HomeActivity extends AppCompatActivity
         mMaterialDialog.show();
     }
 
-    private void startGPS() {
-        Log.d("Logger", "LocalizacaoFragment startGPS");
-        locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        //permissão de GPS
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)) ;
-                // Esperando usuário autorizar permissão
-            else
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_LOCATION);
-        } else
-        if(verificaConexao())
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) this);
-        else
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-
-        if(get){
-
-            Log.d("Logger","Location search latitude: "+latitude+" longitude: "+longitude);
-            get = false;
-            Call<Market> call = ApiClient.API_SERVICE.getMarketByLocation(latitude, longitude,100);
-            call.enqueue(new Callback<Market>() {
-                @Override
-                public void onResponse(Call<Market> call, Response<Market> response) {
-                    if(response.isSuccessful()){
-
-                    }
-                    else{
-                        try {
-                            ErrorResponse error = ApiClient.errorBodyConverter.convert(response.errorBody());
-                            Log.e("Logger", "Pesquisa de atrações "+error.getErrorDescription());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Market> call, Throwable t) {
-                    get = true;
-                    Log.e("Logger","Pesquisa de pontos turisticos error: "+t.toString());
-                    Toast.makeText(HomeActivity.this,"Erro ao se conectar com o servidor!",Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private boolean verificaConexao() {
-        //verificando se o dispositivo tem conexão com internet
-        ConnectivityManager conectivtyManager =
-                (ConnectivityManager) this.getSystemService(this.CONNECTIVITY_SERVICE);
-        if (conectivtyManager.getActiveNetworkInfo() != null
-                && conectivtyManager.getActiveNetworkInfo().isAvailable()
-                && conectivtyManager.getActiveNetworkInfo().isConnected())
-            return true;
-        else
-            return false;
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
     @Override
     public void onDestroy() {
         Log.d("Logger", "LocalizacaoFragment onDestroy");
         super.onDestroy();
-        stopGPS();
-    }
-
-    private void stopGPS(){
-        //permissão de GPS
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)) ;
-                // Esperando usuário autorizar permissão
-            else
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_LOCATION);
-        } else locationManager.removeUpdates(this);
     }
 }

@@ -22,4 +22,24 @@ public class Market {
 
     @SerializedName("network")
     private MarketNetwork network;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public MarketNetwork getNetwork() {
+        return network;
+    }
 }
