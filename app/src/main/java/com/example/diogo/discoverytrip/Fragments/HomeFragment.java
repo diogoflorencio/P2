@@ -22,6 +22,7 @@ import android.widget.ListView;
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
+import com.example.diogo.discoverytrip.REST.ServerResponses.Item;
 import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 
 import java.util.ArrayList;
@@ -83,8 +84,8 @@ public class HomeFragment extends Fragment implements LocationListener {
     }
 
     private void mokup(){
-        List<Oferta> atracoes = new ArrayList<>();
-        Oferta atracao = new Oferta("Teste","Só testando","Testando",null,null,10.9f,9f,null);
+        List<Item> atracoes = new ArrayList<>();
+        Item atracao = new Item();
 
         atracoes.add(atracao);
         atracoes.add(atracao);

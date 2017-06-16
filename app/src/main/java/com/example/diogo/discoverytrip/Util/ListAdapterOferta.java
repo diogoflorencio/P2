@@ -17,6 +17,7 @@ import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
+import com.example.diogo.discoverytrip.REST.ServerResponses.Item;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -36,17 +37,17 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Created by renato on 07/02/17.
  */
-public class ListAdapterOferta extends ArrayAdapter<Oferta>{
+public class ListAdapterOferta extends ArrayAdapter<Item>{
     private List<View> views;
     private LayoutInflater inflater;
-    private List<Oferta> ofertas;
+    private List<Item> ofertas;
     private Activity context;
     private SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private SimpleDateFormat nomalDateFormat = new SimpleDateFormat("dd/M/yyyy");
     private static Semaphore semaphore = new Semaphore(1);
     final static Handler handler = new Handler();
 
-    public ListAdapterOferta(Activity context, List<Oferta> itens){
+    public ListAdapterOferta(Activity context, List<Item> itens){
         super(context, R.layout.item_oferta,itens);
 
         this.inflater = context.getLayoutInflater();
@@ -62,17 +63,17 @@ public class ListAdapterOferta extends ArrayAdapter<Oferta>{
         }
 
         Log.d("Logger","getView "+position);
-        final Oferta oferta = ofertas.get(position);
+        final Item oferta = ofertas.get(position);
         View view = inflater.inflate(R.layout.item_oferta, null, true);
         final ImageView foto = (ImageView) view.findViewById(R.id.iten_img);
 
         final TextView titulo  = (TextView) view.findViewById(R.id.iten_name);
         String photoId = null;
 
-        titulo.setText(oferta.getSupermercado());
-        Log.d("Logger","Supermercado "+oferta.getSupermercado());
+        titulo.setText(oferta.getName());
+        Log.d("Logger","Item "+oferta.getName());
 
-        photoId = oferta.getFotoId();
+        photoId = oferta.getImageId();
         if(photoId != null) {
             final String finalPhotoId1 = photoId;
             new Thread(new Runnable() {
@@ -181,7 +182,7 @@ public class ListAdapterOferta extends ArrayAdapter<Oferta>{
     }
 
     @Override
-    public Oferta getItem(int position){
+    public Item getItem(int position){
         return ofertas.get(position);
     }
 }
