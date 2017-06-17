@@ -1,13 +1,16 @@
 package com.example.diogo.discoverytrip.REST;
 
 
+import com.example.diogo.discoverytrip.REST.ServerResponses.Item;
 import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
-import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseMarketItems;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseGetItems;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseAllMarkets;
-import com.example.diogo.discoverytrip.REST.ServerResponses.ServerResponse;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseProduct;
+
+import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
+import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -22,10 +25,17 @@ public interface ApiInterface {
     Call<ResponseAllMarkets> getAllMarkets();
 
     @GET("api/markets/{id}/items")
-    Call<ResponseMarketItems> getMarketItems(@Path("id") String marketId);
+    Call<ResponseGetItems> getMarketItems(@Path("id") String marketId);
 
     @GET("api/market/search")
     Call<Market> getMarketByLocation(@Query("lagitude") double latitude, @Query("longitude") double longitude, @Query("distance") int distance);
+
+    @GET("api/items/hots")
+    Call<ResponseGetItems> getDateItems(@Query("date") String date);
+
+    @GET("api/markets/{id}/products/{barcode}")
+    Call<ResponseProduct> getProduct(@Path("id") String idMarket, @Path("barcode") String barcode);
+
 //
 //    @POST("api/facebook/login")
 //    Call<LoginResponse> loginFacebook(@Body AccessTokenJson accessToken);

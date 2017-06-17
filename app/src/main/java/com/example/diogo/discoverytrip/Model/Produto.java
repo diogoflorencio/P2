@@ -10,24 +10,23 @@ import java.io.Serializable;
 
 public class Produto implements Serializable{
 
-    @SerializedName("")
+    @SerializedName("price")
     private float valorUn;
 
-    @SerializedName("")
+    @SerializedName("unit")
     private String unidade;
 
-    @SerializedName("")
+    @SerializedName("name")
+    private  String nome;
+
+    @SerializedName("description")
     private String descricao;
 
-    @SerializedName("")
+    @SerializedName("barCode")
     private String codigoBarras;
 
-    public Produto(String codigoBarras, String descricao, float valorUn, String unidade){
-        this.descricao = descricao;
-        this.valorUn = valorUn;
-        this.unidade = unidade;
-        this.codigoBarras = codigoBarras;
-    }
+    @SerializedName("marketId")
+    private String idMarket;
 
     public float getValorUn() {
         return valorUn;
@@ -43,5 +42,13 @@ public class Produto implements Serializable{
 
     public String getCodigoBarras() {
         return codigoBarras;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getIdMarket() {
+        return idMarket;
     }
 }

@@ -9,11 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Model.ItemCompra;
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.Model.Produto;
 import com.example.diogo.discoverytrip.R;
+import com.example.diogo.discoverytrip.REST.ApiClient;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseProduct;
 import com.example.diogo.discoverytrip.Util.Barcode_Detector.BarcodeTrackerFactory;
 import com.example.diogo.discoverytrip.Util.CallBack;
 import com.example.diogo.discoverytrip.Util.Camera_Views.CameraSourcePreview;
@@ -26,6 +30,11 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LeitorCodigoBarrasActivity extends AppCompatActivity implements CallBack{
 
@@ -36,12 +45,13 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
     private GraphicOverlay mOverlay;
     private BarcodeDetector barcodeDetector;
     private BarcodeTrackerFactory barcodeFactory;
+    private String idMarket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leitor_codigo_barras);
-
+        idMarket = (String) getIntent().getExtras().get("idMarket");
         mPreview = (CameraSourcePreview) findViewById(R.id.leitor_codigo_barras_cameraContent);
         mOverlay = (GraphicOverlay) findViewById(R.id.leitor_codigo_barras_cameraView);
     }
@@ -52,7 +62,7 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                showReadDialog(cod);
+               getProduct(cod);
             }
         });
         stopCameraSource();
@@ -93,18 +103,15 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
         }).start();
     }
 
-    private void showReadDialog(final String codigo){
+    private void showReadDialog(final Produto produto){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        final Produto produto = mokup(codigo);
-
         View view = getLayoutInflater().inflate(R.layout.dialog_ler_produto,null,true);
         TextView cod = (TextView) view.findViewById(R.id.dialog_ler_produto_codigo);
         TextView descricao = (TextView) view.findViewById(R.id.dialog_ler_produto_descricao);
         TextView preco = (TextView) view.findViewById(R.id.dialog_ler_produto_preco);
         final EditText quantidade = (EditText) view.findViewById(R.id.dialog_ler_produto_qtd);
 
-        cod.setText(codigo);
+        cod.setText(produto.getCodigoBarras());
         descricao.setText(produto.getDescricao());
         preco.setText(String.valueOf(produto.getValorUn()));
         builder.setCancelable(false);
@@ -144,10 +151,28 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
         Log.d("LoggerCamera","released");
     }
 
-    private Produto mokup(String cod){
+    private void getProduct(String cod){
+        Call<ResponseProduct> call = ApiClient.API_SERVICE.getProduct(idMarket, cod);
+        call.enqueue(new Callback<ResponseProduct>() {
+            @Override
+            public void onResponse(Call<ResponseProduct> call, Response<ResponseProduct> response) {
+                if(response.isSuccessful()){
+                    showReadDialog(response.body().getProduto());
+                }else {
+                    try {
+                        ErrorResponse errorResponse = ApiClient.errorBodyConverter.convert(response.errorBody());
+                        Toast.makeText(LeitorCodigoBarrasActivity.this,errorResponse.getErrorDescription(),Toast.LENGTH_SHORT).show();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
 
-        Produto produto = new Produto(cod,"Teste",15.2f,"Un");
-        return produto;
+            @Override
+            public void onFailure(Call<ResponseProduct> call, Throwable t) {
+                Toast.makeText(LeitorCodigoBarrasActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

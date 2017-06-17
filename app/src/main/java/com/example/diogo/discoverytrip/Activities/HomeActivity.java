@@ -2,6 +2,7 @@ package com.example.diogo.discoverytrip.Activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -116,10 +117,13 @@ public class HomeActivity extends AppCompatActivity
                 currentScreen = R.id.nav_home;
                 break;
             case R.id.nav_comprar:
-                Log.d("Logger", "Leitor código de barras");
+                Log.d("Logger", "Carrinho");
                 fragment = new Carrinho();
                 LeitorCodigoBarrasActivity.width = Resources.getSystem().getDisplayMetrics().widthPixels;
                 LeitorCodigoBarrasActivity.heigth = Resources.getSystem().getDisplayMetrics().heightPixels;
+                break;
+            case R.id.nav_leitorBarcode:
+                Log.d("Logger", "Leitor código de barras");
                 break;
         }
 

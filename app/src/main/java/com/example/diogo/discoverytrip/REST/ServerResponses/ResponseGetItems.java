@@ -10,7 +10,7 @@ import java.util.List;
  * Created by renato on 11/06/17.
  */
 
-public class ResponseMarketItems {
+public class ResponseGetItems {
 
     @SerializedName("items")
     private List<Item> items;

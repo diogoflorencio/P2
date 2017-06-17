@@ -1,17 +1,24 @@
 package com.example.diogo.discoverytrip.Fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.diogo.discoverytrip.Activities.HomeActivity;
 import com.example.diogo.discoverytrip.Activities.LeitorCodigoBarrasActivity;
+import com.example.diogo.discoverytrip.GPS.GPS;
 import com.example.diogo.discoverytrip.GPS.GPSClient;
 import com.example.diogo.discoverytrip.Model.ItemCompra;
 import com.example.diogo.discoverytrip.R;
@@ -20,9 +27,13 @@ import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
 import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
 import com.example.diogo.discoverytrip.Util.ListAdapterItemCompra;
 import com.example.diogo.discoverytrip.Util.Util;
+import com.google.android.gms.ads.formats.NativeAd;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.drakeet.materialdialog.MaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,11 +49,13 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
 
     private List<ItemCompra> produtosLidos;
     private ListView lVProdutos;
-    private TextView tVTotal;
+    private TextView tVTotal, marketView;
     private float total;
     private int distance = 100, getadas = 0;
-    private Market market;
+    private String idMarket;
     private boolean geteiMarket = false;
+    private MaterialDialog mMaterialDialog;
+    private GPS gps;
 
     public Carrinho() {
         // Required empty public constructor
@@ -75,14 +88,18 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
         produtosLidos = new ArrayList<>();
         lVProdutos = (ListView) view.findViewById(R.id.carrinho_list_produtos);
         tVTotal =(TextView) view.findViewById(R.id.carrinho_total);
+        marketView = (TextView) view.findViewById(R.id.carrinho_nome_supermercado);
         total = 0f;
-
+        gps = new GPS(getActivity());
+        gps.addClient(this);
         return view;
     }
 
     @Override
     public void onClick(View v) {
-        startActivityForResult(new Intent(getContext(),LeitorCodigoBarrasActivity.class), 465);
+        Intent intent = new Intent(getContext(),LeitorCodigoBarrasActivity.class);
+        intent.putExtra("idMarket", idMarket);
+        startActivityForResult(intent, 465);
     }
 
     @Override
@@ -103,18 +120,10 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
 
     @Override
     public void locationChange(Location location) {
-        if(!geteiMarket && getadas < 3) {
+        if(!geteiMarket && getadas < 3){
             geteiMarket = true;
             getadas++;
             getMarket(location);
-        }
-
-       else if (market != null) {
-            calcDistancia(Double.valueOf(market.getAddress().getCoordenates().getLatitude()),
-                    Double.valueOf(market.getAddress().getCoordenates().getLongitude()),
-                    location.getLatitude(),
-                    location.getLongitude());
-
         }
     }
 
@@ -136,16 +145,13 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
                 @Override
                 public void onResponse(Call<Market> call, Response<Market> response) {
                     if(response.isSuccessful()){
-                        market = response.body();
+                       setMarket(response.body());
                     }else {
-                        try {
                             geteiMarket = false;
-                            ErrorResponse errorResponse = ApiClient.errorBodyConverter.convert(response.errorBody());
-                            if(getadas >= 3)
-                             Toast.makeText(getContext(),errorResponse.getErrorDescription(),Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            if(getadas == 3) {
+                                callDialogRepeatMarketRequest("Não consiguimos identificar que você está em " +
+                                        "um supermecado. Deseja tentar novamente?",getContext());
+                            }
                     }
                 }
 
@@ -158,12 +164,30 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
             });
     }
 
-    public double calcDistancia(double latitude, double longitude, double latitudePto, double longitudePto){
-        double dlon, dlat, a, distancia;
-        dlon = longitudePto - longitude;
-        dlat = latitudePto - latitude;
-        a = Math.pow(Math.sin(dlat/2),2) + Math.cos(latitude) * Math.cos(latitudePto) * Math.pow(Math.sin(dlon/2),2);
-        distancia = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return 6378140 * distancia; /* 6378140 is the radius of the Earth in meters*/
+    private  void  setMarket(Market market){
+        idMarket = market.getId();
+        marketView.setText(market.getCompany());
+    }
+
+    public void callDialogRepeatMarketRequest(String message, final Context context){
+        mMaterialDialog = new MaterialDialog(context)
+                .setTitle("MarketRequest")
+                .setMessage( message )
+                .setPositiveButton("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getadas = 0;
+                        mMaterialDialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HomeActivity home = (HomeActivity) getActivity();
+                        home.changeFragment(new HomeFragment());
+                        mMaterialDialog.dismiss();
+                    }
+                });
+        mMaterialDialog.show();
     }
 }

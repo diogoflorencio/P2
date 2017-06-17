@@ -1,5 +1,6 @@
 package com.example.diogo.discoverytrip.Fragments;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,13 +11,30 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
+import com.example.diogo.discoverytrip.REST.ApiClient;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
 import com.example.diogo.discoverytrip.REST.ServerResponses.Item;
+import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseGetItems;
 import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Classe fragment responsavel pelo fragmento inicial (home) na aplicação
@@ -27,6 +45,7 @@ public class HomeFragment extends Fragment {
     private ListView listView;
     private Button searchOK;
     private EditText searchText;
+    private static DateFormat dateFormat =  new SimpleDateFormat("dd/MM/yyyy");
 
     public HomeFragment() {
         // Required empty public constructor
@@ -62,20 +81,38 @@ public class HomeFragment extends Fragment {
 //                search();
 //            }
 //        });
-        mokup();
+        getItems();
         return rootView;
     }
 
-    private void mokup(){
-        List<Item> atracoes = new ArrayList<>();
-        Item atracao = new Item();
+    public void getItems(){
+        Call<ResponseGetItems> call  = ApiClient.API_SERVICE.getDateItems(dateFormat.format(new Date()));
+        call.enqueue(new Callback<ResponseGetItems>() {
+            @Override
+            public void onResponse(Call<ResponseGetItems> call, Response<ResponseGetItems> response) {
+                if(response.isSuccessful()){
+                    ResponseGetItems responseGetItems = response.body();
+                    List<Item> items = responseGetItems.getItems();
+                    long seed = System.nanoTime();
+                    Collections.shuffle(items, new Random(seed));
+                    ListAdapterOferta adapter = new ListAdapterOferta(getActivity(), items);
+                    listView.setAdapter(adapter);
+                }else {
+                    try {
+                        ErrorResponse errorResponse = ApiClient.errorBodyConverter.convert(response.errorBody());
+                        Toast.makeText(getContext(), errorResponse.getErrorDescription(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-        atracoes.add(atracao);
-        atracoes.add(atracao);
-        atracoes.add(atracao);
-        ListAdapterOferta adapter = new ListAdapterOferta(getActivity(),
-                atracoes);
-        listView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseGetItems> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
