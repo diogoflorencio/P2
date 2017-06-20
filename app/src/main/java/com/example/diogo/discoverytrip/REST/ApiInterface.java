@@ -9,6 +9,7 @@ import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseProduct;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
@@ -36,9 +37,9 @@ public interface ApiInterface {
     @GET("api/markets/{id}/products/{barcode}")
     Call<ResponseProduct> getProduct(@Path("id") String idMarket, @Path("barcode") String barcode);
 
-//
-//    @POST("api/facebook/login")
-//    Call<LoginResponse> loginFacebook(@Body AccessTokenJson accessToken);
+
+    @GET("/api/items/image/{imageId}")
+    Call<ResponseBody> downloadImage(@Path("imageId") String imageId);
 //
 //    @POST("api/login")
 //    Call<LoginResponse> appLogin(@Body AppLoginJson appLoginJson);

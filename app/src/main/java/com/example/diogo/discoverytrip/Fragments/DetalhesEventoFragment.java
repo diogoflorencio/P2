@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
+import com.example.diogo.discoverytrip.REST.ServerResponses.Item;
 import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 
 import java.text.ParseException;
@@ -18,7 +19,7 @@ import java.text.SimpleDateFormat;
 
 public class DetalhesEventoFragment extends Fragment{
 
-    public static Oferta atracao;
+    public static Item atracao;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
     private static SimpleDateFormat normalDateFormat = new SimpleDateFormat("dd/M/yyyy HH:mm");
 
@@ -44,14 +45,14 @@ public class DetalhesEventoFragment extends Fragment{
         preco = (TextView) view.findViewById(R.id.detalhe_evento_preco);
         foto = (ImageView) view.findViewById(R.id.detalhe_evento_img);
 
-        titulo.setText(atracao.getSupermercado());
-        descricao.setText(atracao.getDescricao());
+        titulo.setText(atracao.getName());
+        descricao.setText(atracao.getDescription());
 
-        if(atracao.getFotoId() != null && !atracao.getFotoId().equals("")){
+        if(atracao.getImageId() != null && !atracao.getImageId().equals("")){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ListAdapterOferta.loadImage(foto,atracao.getFotoId(),getContext());
+                    ListAdapterOferta.loadImage(foto,atracao.getImageId(),getContext());
                 }
             }).start();
         }

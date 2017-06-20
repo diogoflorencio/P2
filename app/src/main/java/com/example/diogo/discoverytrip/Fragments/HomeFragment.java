@@ -65,12 +65,11 @@ public class HomeFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Oferta atracao = (Oferta) parent.getAdapter().getItem(position);
+                Item atracao = (Item) parent.getAdapter().getItem(position);
                 DetalhesEventoFragment.atracao = atracao;
 
                 HomeActivity activity = (HomeActivity) getActivity();
                 activity.changeFragment(new DetalhesEventoFragment());
-
             }
         });
         searchText  = (EditText) rootView.findViewById(R.id.pnt_search_edt);

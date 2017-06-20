@@ -89,64 +89,63 @@ public class ListAdapterOferta extends ArrayAdapter<Item>{
     }
 
    public static void loadImage(final ImageView imgView, final String photoId, final Context context){
-//        try{
-//            semaphore.acquire();
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        Log.d("Logger","loadImage");
-//        handler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    imgView.setImageBitmap(loadImageFromInternalStorage(photoId,context));
-//                    Log.d("Looger","loadImage finish");
-//                    semaphore.release();
-//
-//                } catch (FileNotFoundException e) {
-//                    retrofit2.Call<ResponseBody> call = ApiClient.API_SERVICE.downloadFoto("bearer "+AcessToken.recuperar(context.getSharedPreferences("acessToken", Context.MODE_PRIVATE)),
-//                            photoId);
-//                    call.enqueue(new retrofit2.Callback<ResponseBody>() {
-//
-//                        @Override
-//                        public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-//                            if (response.isSuccessful()) {
-//                                InputStream input = response.body().byteStream();
-//                                //Convert a foto em Bitmap
-//                                final Bitmap img = BitmapFactory.decodeStream(input);
-//
-//                                saveImageToInternalStorage(photoId,img,context);
-//
-//                                //Coloca a foto na imageView
-//                                try {
-//                                    imgView.setImageBitmap(loadImageFromInternalStorage(photoId,context));
-//                                } catch (FileNotFoundException e1) {
-//                                    Log.e("Logger","Erro ao carregar foto");
-//                                    e1.printStackTrace();
-//                                }
-//
-//                            } else {
-//                                try {
-//                                    ErrorResponse error = ApiClient.errorBodyConverter.convert(response.errorBody());
-//                                    Log.e("Pesquisa pontos tur",error.getErrorDescription());
-//                                } catch (IOException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                            semaphore.release();
-//                            Log.d("Logger","Load image finish");
-//                        }
-//
-//                        @Override
-//                        public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-//                            // Log error here since request failed
-//                            Log.e("Pesquisa pontos tur","Erro ao baixar imagem");
-//                            semaphore.release();
-//                        }
-//                    });
-//                }
-//            }
-//        });
+        try{
+            semaphore.acquire();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Log.d("Logger","loadImage");
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    imgView.setImageBitmap(loadImageFromInternalStorage(photoId,context));
+                    Log.d("Looger","loadImage finish");
+                    semaphore.release();
+
+                } catch (FileNotFoundException e) {
+                    retrofit2.Call<ResponseBody> call = ApiClient.API_SERVICE.downloadImage(photoId);
+                    call.enqueue(new retrofit2.Callback<ResponseBody>() {
+
+                        @Override
+                        public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                InputStream input = response.body().byteStream();
+                                //Convert a foto em Bitmap
+                                final Bitmap img = BitmapFactory.decodeStream(input);
+
+                                saveImageToInternalStorage(photoId,img,context);
+
+                                //Coloca a foto na imageView
+                                try {
+                                    imgView.setImageBitmap(loadImageFromInternalStorage(photoId,context));
+                                } catch (FileNotFoundException e1) {
+                                    Log.e("Logger","Erro ao carregar foto");
+                                    e1.printStackTrace();
+                                }
+
+                            } else {
+                                try {
+                                    ErrorResponse error = ApiClient.errorBodyConverter.convert(response.errorBody());
+                                    Log.e("Pesquisa pontos tur",error.getErrorDescription());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            semaphore.release();
+                            Log.d("Logger","Load image finish");
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                            // Log error here since request failed
+                            Log.e("Pesquisa pontos tur","Erro ao baixar imagem");
+                            semaphore.release();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private static void saveImageToInternalStorage(String imageName, Bitmap imagem, Context context){
