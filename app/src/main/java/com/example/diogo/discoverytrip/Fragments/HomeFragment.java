@@ -1,7 +1,10 @@
 package com.example.diogo.discoverytrip.Fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

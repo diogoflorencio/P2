@@ -97,6 +97,10 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
 
     @Override
     public void onClick(View v) {
+        if(idMarket == null){
+            Toast.makeText(getContext(),"Não foi possível determinar sua localização. Verifique se o GPS está ligado!",Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(getContext(),LeitorCodigoBarrasActivity.class);
         intent.putExtra("idMarket", idMarket);
         startActivityForResult(intent, 465);
@@ -134,8 +138,31 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
 
     @Override
     public void onProviderDisabled(String provider) {
-        Util.callDialogGPS("Para o uso deste serviço o GPS precisa estar ligado. " +
-                "Deseja ligar agora?", getContext());
+        callDialogGPS("Para o uso deste serviço o GPS precisa estar ligado. " +
+                "Deseja ligar agora?");
+    }
+
+    private void callDialogGPS(String message){
+        final HomeActivity activity = (HomeActivity) getActivity();
+        mMaterialDialog = new MaterialDialog(activity)
+                .setTitle("Permission")
+                .setMessage( message )
+                .setPositiveButton("Ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        activity.startActivity(intent);
+                        mMaterialDialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMaterialDialog.dismiss();
+                    }
+                });
+        mMaterialDialog.show();
     }
 
     public void getMarket(Location location){
