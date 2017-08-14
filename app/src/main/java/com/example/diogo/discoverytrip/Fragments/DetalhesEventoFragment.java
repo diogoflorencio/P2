@@ -8,13 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ServerResponses.Item;
 import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 
 public class DetalhesEventoFragment extends Fragment{

@@ -1,10 +1,6 @@
 package com.example.diogo.discoverytrip.Fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,25 +13,21 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
-import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
 import com.example.diogo.discoverytrip.REST.ServerResponses.Item;
-import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseGetItems;
 import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import me.drakeet.materialdialog.MaterialDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

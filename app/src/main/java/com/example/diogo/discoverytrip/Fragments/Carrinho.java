@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
     private ListView lVProdutos;
     private TextView tVTotal, marketView;
     private float total;
-    private int distance = 100, getadas = 0;
+    private int distance = 500, getadas = 0;
     private String idMarket;
     private boolean geteiMarket = false;
     private MaterialDialog mMaterialDialog;
@@ -124,6 +125,7 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
 
     @Override
     public void locationChange(Location location) {
+        Log.d("LoggerLocation","Lat: "+location.getLatitude() + " Long: "+location.getLongitude());
         if(!geteiMarket && getadas < 3){
             geteiMarket = true;
             getadas++;
@@ -171,9 +173,11 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
             call.enqueue(new Callback<Market>() {
                 @Override
                 public void onResponse(Call<Market> call, Response<Market> response) {
+
                     if(response.isSuccessful()){
-                       setMarket(response.body());
+                        setMarket(response.body());
                     }else {
+                        Log.d("Logger","Não localizou mercado");
                             geteiMarket = false;
                             if(getadas == 3) {
                                 callDialogRepeatMarketRequest("Não consiguimos identificar que você está em " +
@@ -192,6 +196,7 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
     }
 
     private  void  setMarket(Market market){
+        Log.d("Logger","Market id " + market.getId());
         idMarket = market.getId();
         marketView.setText(market.getCompany());
     }

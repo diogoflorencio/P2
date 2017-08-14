@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Model.ItemCompra;
-import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.Model.Produto;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
@@ -22,15 +21,11 @@ import com.example.diogo.discoverytrip.Util.Barcode_Detector.BarcodeTrackerFacto
 import com.example.diogo.discoverytrip.Util.CallBack;
 import com.example.diogo.discoverytrip.Util.Camera_Views.CameraSourcePreview;
 import com.example.diogo.discoverytrip.Util.Camera_Views.GraphicOverlay;
-import com.example.diogo.discoverytrip.Util.ListAdapterOferta;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
 
 import retrofit2.Call;
 import retrofit2.Callback;

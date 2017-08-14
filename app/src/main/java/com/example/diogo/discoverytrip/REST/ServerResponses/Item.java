@@ -8,7 +8,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Item {
 
-    @SerializedName("type")
+    @SerializedName("_id")
+    private String id;
+
+    @SerializedName("_type")
     private String type;
 
     @SerializedName("name")
@@ -76,5 +79,9 @@ public class Item {
 
     public String getPremium() {
         return premium;
+    }
+
+    public String getId(){
+        return id;
     }
 }

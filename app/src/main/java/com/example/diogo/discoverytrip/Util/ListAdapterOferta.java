@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.diogo.discoverytrip.Model.Oferta;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
@@ -43,7 +42,7 @@ public class ListAdapterOferta extends ArrayAdapter<Item>{
     private List<Item> ofertas;
     private Activity context;
     private SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    private SimpleDateFormat nomalDateFormat = new SimpleDateFormat("dd/M/yyyy");
+    private SimpleDateFormat nomalDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private static Semaphore semaphore = new Semaphore(1);
     final static Handler handler = new Handler();
 
@@ -68,27 +67,24 @@ public class ListAdapterOferta extends ArrayAdapter<Item>{
         final ImageView foto = (ImageView) view.findViewById(R.id.iten_img);
 
         final TextView titulo  = (TextView) view.findViewById(R.id.iten_name);
-        String photoId = null;
 
         titulo.setText(oferta.getName());
         Log.d("Logger","Item "+oferta.getName());
 
-        photoId = oferta.getImageId();
-        if(photoId != null) {
-            final String finalPhotoId1 = photoId;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    loadImage(foto, finalPhotoId1, context);
-                }
-            }).start();
-        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                loadImage(foto, oferta.getId(), context);
+            }
+        }).start();
+
 
         views.add(view);
         return view;
     }
 
-   public static void loadImage(final ImageView imgView, final String photoId, final Context context){
+   public static void loadImage(final ImageView imgView, final String itemId, final Context context){
         try{
             semaphore.acquire();
         }catch (Exception e){
@@ -99,12 +95,12 @@ public class ListAdapterOferta extends ArrayAdapter<Item>{
             @Override
             public void run() {
                 try {
-                    imgView.setImageBitmap(loadImageFromInternalStorage(photoId,context));
+                    imgView.setImageBitmap(loadImageFromInternalStorage(itemId,context));
                     Log.d("Looger","loadImage finish");
                     semaphore.release();
 
                 } catch (FileNotFoundException e) {
-                    retrofit2.Call<ResponseBody> call = ApiClient.API_SERVICE.downloadImage(photoId);
+                    retrofit2.Call<ResponseBody> call = ApiClient.API_SERVICE.downloadImage(itemId);
                     call.enqueue(new retrofit2.Callback<ResponseBody>() {
 
                         @Override
@@ -114,11 +110,11 @@ public class ListAdapterOferta extends ArrayAdapter<Item>{
                                 //Convert a foto em Bitmap
                                 final Bitmap img = BitmapFactory.decodeStream(input);
 
-                                saveImageToInternalStorage(photoId,img,context);
+                                saveImageToInternalStorage(itemId,img,context);
 
                                 //Coloca a foto na imageView
                                 try {
-                                    imgView.setImageBitmap(loadImageFromInternalStorage(photoId,context));
+                                    imgView.setImageBitmap(loadImageFromInternalStorage(itemId,context));
                                 } catch (FileNotFoundException e1) {
                                     Log.e("Logger","Erro ao carregar foto");
                                     e1.printStackTrace();

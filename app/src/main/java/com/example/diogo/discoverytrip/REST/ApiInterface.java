@@ -38,8 +38,8 @@ public interface ApiInterface {
     Call<ResponseProduct> getProduct(@Path("id") String idMarket, @Path("barcode") String barcode);
 
 
-    @GET("/api/items/image/{imageId}")
-    Call<ResponseBody> downloadImage(@Path("imageId") String imageId);
+    @GET("/api/items/{itemId}/image")
+    Call<ResponseBody> downloadImage(@Path("itemId") String itemId);
 //
 //    @POST("api/login")
 //    Call<LoginResponse> appLogin(@Body AppLoginJson appLoginJson);

@@ -90,7 +90,7 @@ public class HomeActivity extends AppCompatActivity
         Log.d("Logger", "Home onOptionsItemSelected");
         int id = item.getItemId();
         switch (id) {
-            case R.id.logout:
+            case R.id.exit:
                 Log.d("Logger", "Home logout");
                 WIFIManager wf = new WIFIManager(this.getApplication());
                 Log.d("Logger", "isConnected() "+wf.isConnected());
