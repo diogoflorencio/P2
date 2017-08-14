@@ -202,7 +202,7 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
 
     private  void  setMarket(ResponseAllMarkets serverResponse){
         Market market = serverResponse.getMarkets().get(0);
-        Log.d("Logger","market id "+market.getId());
+        Log.d("Logger","market manager "+market.getManager());
         idMarket = market.getId();
         marketView.setText(market.getCompany());
     }
@@ -227,11 +227,5 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
                     }
                 });
         mMaterialDialog.show();
-    }
-
-    @Override
-    public void onDestroy(){
-        gps.stopGPS(this.getActivity());
-        super.onDestroy();
     }
 }
