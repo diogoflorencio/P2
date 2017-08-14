@@ -2,6 +2,8 @@ package com.example.diogo.discoverytrip.REST.ServerResponses;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by renato on 11/06/17.
  */
@@ -18,7 +20,7 @@ public class Market {
     private String manager;
 
     @SerializedName("address")
-    private Address address;
+    private List<Address> address;
 
     @SerializedName("network")
     private MarketNetwork network;
@@ -35,7 +37,7 @@ public class Market {
         return manager;
     }
 
-    public Address getAddress() {
+    public List<Address> getAddress() {
         return address;
     }
 

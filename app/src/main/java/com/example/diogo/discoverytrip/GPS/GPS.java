@@ -36,7 +36,7 @@ public class GPS implements LocationListener {
 
     }
 
-    private void startGPS(Activity activity) {
+    public void startGPS(Activity activity) {
         Log.d("Logger", "LocalizacaoFragment startGPS");
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         //permissão de GPS
@@ -57,7 +57,7 @@ public class GPS implements LocationListener {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
     }
 
-    private void stopGPS(Activity activity){
+    public void stopGPS(Activity activity){
         //permissão de GPS
         if (ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&

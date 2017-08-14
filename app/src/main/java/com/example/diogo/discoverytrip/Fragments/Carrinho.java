@@ -26,6 +26,7 @@ import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
 import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseAllMarkets;
 import com.example.diogo.discoverytrip.Util.ListAdapterItemCompra;
 import com.example.diogo.discoverytrip.Util.Util;
 import com.google.android.gms.ads.formats.NativeAd;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.drakeet.materialdialog.MaterialDialog;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -129,6 +131,7 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
         if(!geteiMarket && getadas < 3){
             geteiMarket = true;
             getadas++;
+            Log.d("Logger","getMarket");
             getMarket(location);
         }
     }
@@ -168,11 +171,11 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
     }
 
     public void getMarket(Location location){
-            Call<Market> call  = ApiClient.API_SERVICE.getMarketByLocation(location.getLatitude(),
+            Call<ResponseAllMarkets> call  = ApiClient.API_SERVICE.getMarketByLocation(location.getLatitude(),
                     location.getLongitude(),distance);
-            call.enqueue(new Callback<Market>() {
+            call.enqueue(new Callback<ResponseAllMarkets>() {
                 @Override
-                public void onResponse(Call<Market> call, Response<Market> response) {
+                public void onResponse(Call<ResponseAllMarkets> call, Response<ResponseAllMarkets> response) {
 
                     if(response.isSuccessful()){
                         setMarket(response.body());
@@ -187,16 +190,19 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
                 }
 
                 @Override
-                public void onFailure(Call<Market> call, Throwable t) {
+                public void onFailure(Call<ResponseAllMarkets> call, Throwable t) {
                     geteiMarket = false;
-                    if(getadas >= 3)
-                        Toast.makeText(getContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
+                    if(getadas >= 3) {
+                        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("LoggerGetFail", t.getMessage());
+                    }
                 }
             });
     }
 
-    private  void  setMarket(Market market){
-        Log.d("Logger","Market id " + market.getId());
+    private  void  setMarket(ResponseAllMarkets serverResponse){
+        Market market = serverResponse.getMarkets().get(0);
+        Log.d("Logger","market id "+market.getId());
         idMarket = market.getId();
         marketView.setText(market.getCompany());
     }
@@ -221,5 +227,11 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
                     }
                 });
         mMaterialDialog.show();
+    }
+
+    @Override
+    public void onDestroy(){
+        gps.stopGPS(this.getActivity());
+        super.onDestroy();
     }
 }

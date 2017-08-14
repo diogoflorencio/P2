@@ -28,8 +28,8 @@ public interface ApiInterface {
     @GET("api/markets/{id}/items")
     Call<ResponseGetItems> getMarketItems(@Path("id") String marketId);
 
-    @GET("api/market/search")
-    Call<Market> getMarketByLocation(@Query("lagitude") double latitude, @Query("longitude") double longitude, @Query("distance") int distance);
+    @GET("api/markets/search")
+    Call<ResponseAllMarkets> getMarketByLocation(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("distance") int distance);
 
     @GET("api/items/hots")
     Call<ResponseGetItems> getDateItems(@Query("date") String date);
