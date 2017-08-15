@@ -2,18 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.diogo.discoverytrip">
 
-    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
-    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
-    <!--<uses-permission android:name="android.permission.USE_CREDENTIALS" />-->
+    <!-- <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> -->
+    <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
+    <!-- <uses-permission android:name="android.permission.USE_CREDENTIALS" /> -->
+
 
     <!-- permissoes GPS -->
-    <!--<uses-permission android:name="android.permission.INTERNET" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
-    <!--<uses-permission android:name="android.permission.READ_LOGS" />-->
-    <!--<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />-->
+    <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
+    <!-- <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" /> -->
+
 
     <!-- permissão para manipular wifi -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -39,7 +41,6 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -50,9 +51,9 @@
         <activity
             android:name=".Activities.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/DiscoveryTripTheme">
+            android:theme="@style/DiscoveryTripTheme"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -76,15 +77,16 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
-            <!--<intent-filter>-->
-                <!--<action android:name="android.net.wifi.STATE_CHANGE" />-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.net.wifi.STATE_CHANGE" /> -->
+            <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
+            <!-- </intent-filter> -->
         </receiver>
 
         <service android:name=".Service.ServiceNotificacao" />
 
-        <activity android:name=".Activities.LeitorCodigoBarrasActivity"></activity>
+        <activity android:name=".Activities.LeitorCodigoBarrasActivity" />
+        <activity android:name=".Activities.ConsultorDePreco"></activity>
     </application>
 
 </manifest>

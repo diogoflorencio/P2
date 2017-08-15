@@ -31,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LeitorCodigoBarrasActivity extends AppCompatActivity implements CallBack{
+public class ConsultorDePreco extends AppCompatActivity implements CallBack {
 
     public static int width, heigth;
     private CameraSourcePreview mPreview;
@@ -45,10 +45,10 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leitor_codigo_barras);
+        setContentView(R.layout.activity_consultor_de_preco);
         idMarket = (String) getIntent().getExtras().get("idMarket");
-        mPreview = (CameraSourcePreview) findViewById(R.id.leitor_codigo_barras_cameraContent);
-        mOverlay = (GraphicOverlay) findViewById(R.id.leitor_codigo_barras_cameraView);
+        mPreview = (CameraSourcePreview) findViewById(R.id.consultor_codigo_barras_cameraContent);
+        mOverlay = (GraphicOverlay) findViewById(R.id.consultor_codigo_barras_cameraView);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-               getProduct(cod);
+                getProduct(cod);
             }
         });
         stopCameraSource();
@@ -100,33 +100,29 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
 
     private void showReadDialog(final Produto produto){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.dialog_ler_produto,null,true);
-        TextView cod = (TextView) view.findViewById(R.id.dialog_ler_produto_codigo);
+        View view = getLayoutInflater().inflate(R.layout.dialog_consulta_produto,null,true);
+        TextView cod = (TextView) view.findViewById(R.id.dialog_consulta_produto_codigo);
         TextView descricao = (TextView) view.findViewById(R.id.dialog_consulta_produto_descricao);
-        TextView preco = (TextView) view.findViewById(R.id.dialog_ler_produto_preco);
-        final EditText quantidade = (EditText) view.findViewById(R.id.dialog_ler_produto_qtd);
+        TextView preco = (TextView) view.findViewById(R.id.dialog_consulta_produto_preco);
 
         cod.setText(produto.getCodigoBarras());
         descricao.setText(produto.getDescricao());
         preco.setText(String.valueOf(produto.getValorUn()));
+        builder.setCancelable(false);
         builder.setView(view);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                Intent intent = new Intent();
-                intent.putExtra("Item", new ItemCompra(produto,Float.valueOf(quantidade.getText().toString())));
-                setResult(465,intent);
-                dialog.dismiss();
-                finish();
-            }
-        });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 startCameraSource();
                 dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Terminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
             }
         });
         builder.setCancelable(false);
@@ -155,7 +151,9 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
                 }else {
                     try {
                         ErrorResponse errorResponse = ApiClient.errorBodyConverter.convert(response.errorBody());
-                        Toast.makeText(LeitorCodigoBarrasActivity.this,errorResponse.getErrorDescription(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConsultorDePreco.this,errorResponse.getErrorDescription(),Toast.LENGTH_SHORT).show();
+                        Log.e("Logger",errorResponse.getErrorDescription());
+                        startCameraSource();
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -164,7 +162,7 @@ public class LeitorCodigoBarrasActivity extends AppCompatActivity implements Cal
 
             @Override
             public void onFailure(Call<ResponseProduct> call, Throwable t) {
-                Toast.makeText(LeitorCodigoBarrasActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(ConsultorDePreco.this,t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }

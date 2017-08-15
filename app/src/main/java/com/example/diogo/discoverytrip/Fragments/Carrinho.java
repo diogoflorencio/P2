@@ -58,7 +58,7 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
     private String idMarket;
     private boolean geteiMarket = false;
     private MaterialDialog mMaterialDialog;
-    private GPS gps;
+    private GPS gps = GPS.instance;
 
     public Carrinho() {
         // Required empty public constructor
@@ -93,7 +93,6 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
         tVTotal =(TextView) view.findViewById(R.id.carrinho_total);
         marketView = (TextView) view.findViewById(R.id.carrinho_nome_supermercado);
         total = 0f;
-        gps = new GPS(getActivity());
         gps.addClient(this);
         return view;
     }
@@ -171,40 +170,40 @@ public class Carrinho extends Fragment implements GPSClient, View.OnClickListene
     }
 
     public void getMarket(Location location){
-            Call<ResponseAllMarkets> call  = ApiClient.API_SERVICE.getMarketByLocation(location.getLatitude(),
-                    location.getLongitude(),distance);
-            call.enqueue(new Callback<ResponseAllMarkets>() {
-                @Override
-                public void onResponse(Call<ResponseAllMarkets> call, Response<ResponseAllMarkets> response) {
+        Call<ResponseAllMarkets> call  = ApiClient.API_SERVICE.getMarketByLocation(location.getLatitude(),
+                location.getLongitude(),distance);
+        call.enqueue(new Callback<ResponseAllMarkets>() {
+            @Override
+            public void onResponse(Call<ResponseAllMarkets> call, Response<ResponseAllMarkets> response) {
 
-                    if(response.isSuccessful()){
-                        setMarket(response.body());
-                    }else {
-                        Log.d("Logger","Não localizou mercado");
-                            geteiMarket = false;
-                            if(getadas == 3) {
-                                callDialogRepeatMarketRequest("Não consiguimos identificar que você está em " +
-                                        "um supermecado. Deseja tentar novamente?",getContext());
-                            }
-                    }
+                if(response.isSuccessful()){
+                    setMarket(response.body());
+                }else {
+                    Log.d("Logger","Não localizou mercado");
+                        geteiMarket = false;
+                        if(getadas == 3) {
+                            callDialogRepeatMarketRequest("Não consiguimos identificar que você está em " +
+                                    "um supermecado. Deseja tentar novamente?",getContext());
+                        }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ResponseAllMarkets> call, Throwable t) {
-                    geteiMarket = false;
-                    if(getadas >= 3) {
-                        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("LoggerGetFail", t.getMessage());
-                    }
+            @Override
+            public void onFailure(Call<ResponseAllMarkets> call, Throwable t) {
+                geteiMarket = false;
+                if(getadas >= 3) {
+                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("LoggerGetFail", t.getMessage());
                 }
-            });
+            }
+        });
     }
 
     private  void  setMarket(ResponseAllMarkets serverResponse){
         Market market = serverResponse.getMarkets().get(0);
-        Log.d("Logger","market manager "+market.getManager());
         idMarket = market.getId();
         marketView.setText(market.getCompany());
+        gps.removeClient(this);
     }
 
     public void callDialogRepeatMarketRequest(String message, final Context context){

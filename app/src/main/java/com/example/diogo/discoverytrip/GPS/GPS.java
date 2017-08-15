@@ -20,6 +20,7 @@ import java.util.List;
 
 public class GPS implements LocationListener {
 
+    public static GPS instance;
     private List<GPSClient> clients;
     private static LocationManager locationManager;
     private static final int REQUEST_LOCATION = 2;
@@ -36,7 +37,7 @@ public class GPS implements LocationListener {
 
     }
 
-    public void startGPS(Activity activity) {
+    private void startGPS(Activity activity) {
         Log.d("Logger", "LocalizacaoFragment startGPS");
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         //permissão de GPS

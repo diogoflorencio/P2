@@ -1,5 +1,6 @@
 package com.example.diogo.discoverytrip.Fragments;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Activities.HomeActivity;
+import com.example.diogo.discoverytrip.GPS.GPSClient;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
@@ -108,11 +110,5 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d("Logger", "LocalizacaoFragment onDestroy");
-        super.onDestroy();
     }
 }

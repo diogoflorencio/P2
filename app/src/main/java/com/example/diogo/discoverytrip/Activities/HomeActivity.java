@@ -1,6 +1,8 @@
 package com.example.diogo.discoverytrip.Activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,15 +26,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.diogo.discoverytrip.Fragments.Carrinho;
 import com.example.diogo.discoverytrip.Fragments.HomeFragment;
+import com.example.diogo.discoverytrip.GPS.GPS;
 import com.example.diogo.discoverytrip.GPS.GPSClient;
 import com.example.diogo.discoverytrip.R;
 import com.example.diogo.discoverytrip.REST.ApiClient;
 import com.example.diogo.discoverytrip.REST.ServerResponses.ErrorResponse;
 import com.example.diogo.discoverytrip.REST.ServerResponses.Market;
+import com.example.diogo.discoverytrip.REST.ServerResponses.ResponseAllMarkets;
 import com.example.diogo.discoverytrip.Util.WIFIManager;
 
 import java.io.IOException;
@@ -46,7 +51,7 @@ import retrofit2.Response;
  * Classe activity responsavel pela activity home (principal) na aplicação
  */
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GPSClient {
 
 //    public static final String EVENT_TYPE = "Event";
     private int currentScreen = 0;
@@ -55,6 +60,7 @@ public class HomeActivity extends AppCompatActivity
 
     private MaterialDialog mMaterialDialog;
     private boolean get = true;
+    private Location location;
 
     /**
      * Metodo responsavel por gerenciar a criacao de um objeto 'HomeActivity'
@@ -75,6 +81,8 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         createHomeFragment();
         permission();
+        GPS.instance = new GPS(this);
+        GPS.instance.addClient(this);
     }
 
     @Override
@@ -124,6 +132,15 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case R.id.nav_leitorBarcode:
                 Log.d("Logger", "Leitor código de barras");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                View view = getLayoutInflater().inflate(R.layout.dialog_aguarde,null,true);
+                TextView status = (TextView) view.findViewById(R.id.dialog_aguarde_txtStatus);
+                status.setText("Buscando mercados");
+                builder.setView(view);
+                builder.setCancelable(false);
+                Dialog waitDialog = builder.create();
+                waitDialog.show();
+                getMarket(location,waitDialog);
                 break;
         }
 
@@ -207,9 +224,52 @@ public class HomeActivity extends AppCompatActivity
         mMaterialDialog.show();
     }
 
+    public void getMarket(Location location, final Dialog waitDialog){
+        Call<ResponseAllMarkets> call  = ApiClient.API_SERVICE.getMarketByLocation(location.getLatitude(),
+                location.getLongitude(),500);
+        call.enqueue(new Callback<ResponseAllMarkets>() {
+            @Override
+            public void onResponse(Call<ResponseAllMarkets> call, Response<ResponseAllMarkets> response) {
+
+                if(response.isSuccessful()){
+                    waitDialog.dismiss();
+                    Intent intent = new Intent(HomeActivity.this,ConsultorDePreco.class);
+                    intent.putExtra("idMarket", response.body().getMarkets().get(0).getId());
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(HomeActivity.this, "Não foi possível localizar um supermercado na região", Toast.LENGTH_SHORT).show();
+                    waitDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseAllMarkets> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                waitDialog.dismiss();
+                Log.e("LoggerGetFail", t.getMessage());
+            }
+        });
+    }
+
     @Override
     public void onDestroy() {
         Log.d("Logger", "LocalizacaoFragment onDestroy");
+        GPS.instance.removeClient(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void locationChange(Location location) {
+        this.location = location;
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }
